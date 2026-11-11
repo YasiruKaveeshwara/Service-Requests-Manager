@@ -1,0 +1,179 @@
+openapi: 3.0.3
+info:
+  title: Quantix Service Requests API
+  version: 1.0.0
+  description: |
+    Internal service request and approval API.
+    Seeded logins (password for all: `password`): employee1@quantix.test, manager@quantix.test, ops1@quantix.test.
+    Call POST /login, copy `data.token`, click Authorize and paste the token.
+servers:
+  - url: http://localhost:5000/api
+security:
+  - bearerAuth: []
+tags:
+  - { name: System }
+  - { name: Auth }
+  - { name: Requests }
+  - { name: Workflow }
+  - { name: Comments and Activity }
+  - { name: Notifications }
+components:
+  securitySchemes:
+    bearerAuth: { type: http, scheme: bearer }
+  parameters:
+    RequestId: { name: serviceRequest, in: path, required: true, schema: { type: integer } }
+  responses:
+    Unauthenticated: { description: Missing or invalid token }
+    Forbidden: { description: Not allowed to do this }
+    NotFound: { description: Resource not found }
+    Unprocessable: { description: Validation failed or invalid transition }
+  schemas:
+    Error:
+      type: object
+      required: [message, code]
+      properties:
+        message: { type: string }
+        code: { type: string }
+        errors: { type: object, nullable: true }
+    User:
+      type: object
+      properties:
+        id: { type: integer }
+        name: { type: string }
+        email: { type: string }
+        role: { type: string, enum: [employee, manager, operations] }
+        role_label: { type: string }
+        manager_id: { type: integer, nullable: true }
+    Abilities:
+      type: object
+      additionalProperties: { type: boolean }
+    Comment:
+      type: object
+      properties:
+        id: { type: integer }
+        body: { type: string }
+        user: { $ref: '#/components/schemas/User' }
+        created_at: { type: string, format: date-time }
+    ActivityLog:
+      type: object
+      properties:
+        id: { type: integer }
+        event: { type: string }
+        from_status: { type: string, nullable: true }
+        to_status: { type: string, nullable: true }
+        comment: { type: string, nullable: true }
+        metadata: { type: object, nullable: true }
+        actor: { $ref: '#/components/schemas/User' }
+        created_at: { type: string, format: date-time }
+    ServiceRequest:
+      type: object
+      properties:
+        id: { type: integer }
+        title: { type: string }
+        description: { type: string }
+        category: { type: string }
+        category_label: { type: string }
+        priority: { type: string }
+        priority_label: { type: string }
+        status: { type: string }
+        status_label: { type: string }
+        requester: { $ref: '#/components/schemas/User' }
+        assignee: { allOf: [{ $ref: '#/components/schemas/User' }], nullable: true }
+        submitted_at: { type: string, format: date-time, nullable: true }
+        completed_at: { type: string, format: date-time, nullable: true }
+        created_at: { type: string, format: date-time }
+        updated_at: { type: string, format: date-time }
+        comments: { type: array, items: { $ref: '#/components/schemas/Comment' } }
+        activity: { type: array, items: { $ref: '#/components/schemas/ActivityLog' } }
+        abilities: { $ref: '#/components/schemas/Abilities' }
+    Notification:
+      type: object
+      properties:
+        id: { type: string }
+        type: { type: string, nullable: true }
+        message: { type: string }
+        request_id: { type: integer, nullable: true }
+        read_at: { type: string, format: date-time, nullable: true }
+        created_at: { type: string, format: date-time }
+paths:
+  /health:
+    get:
+      security: []
+      tags: [System]
+      responses: { '200': { description: Healthy } }
+  /login:
+    post:
+      security: []
+      tags: [Auth]
+      requestBody:
+        required: true
+        content:
+          application/json: { schema: { type: object, required: [email, password] } }
+      responses: { '200': { description: Authenticated } }
+  /logout:
+    post:
+      tags: [Auth]
+      responses: { '200': { description: Logged out } }
+  /me:
+    get:
+      tags: [Auth]
+      responses: { '200': { description: Current user } }
+  /requests:
+    get:
+      tags: [Requests]
+      responses: { '200': { description: Request list } }
+    post:
+      tags: [Requests]
+      responses: { '201': { description: Request created } }
+  /requests/{serviceRequest}:
+    parameters: [{ $ref: '#/components/parameters/RequestId' }]
+    get:
+      tags: [Requests]
+      responses: { '200': { description: Request details } }
+    put:
+      tags: [Requests]
+      responses: { '200': { description: Request updated } }
+  /requests/{serviceRequest}/submit:
+    post:
+      tags: [Workflow]
+      responses: { '200': { description: Submitted } }
+  /requests/{serviceRequest}/cancel:
+    post:
+      tags: [Workflow]
+      responses: { '200': { description: Cancelled } }
+  /requests/{serviceRequest}/decision:
+    post:
+      tags: [Workflow]
+      responses: { '200': { description: Decision applied } }
+  /requests/{serviceRequest}/assign:
+    post:
+      tags: [Workflow]
+      responses: { '200': { description: Assigned } }
+  /requests/{serviceRequest}/status:
+    post:
+      tags: [Workflow]
+      responses: { '200': { description: Status changed } }
+  /requests/{serviceRequest}/comments:
+    post:
+      tags: [Comments and Activity]
+      responses: { '201': { description: Comment created } }
+  /requests/{serviceRequest}/activity:
+    get:
+      tags: [Comments and Activity]
+      responses: { '200': { description: Activity list } }
+  /users:
+    get:
+      tags: [Auth]
+      responses: { '200': { description: User list } }
+  /notifications:
+    get:
+      tags: [Notifications]
+      responses: { '200': { description: Notification list } }
+  /notifications/read-all:
+    post:
+      tags: [Notifications]
+      responses: { '200': { description: Notifications marked read } }
+  /notifications/{id}/read:
+    post:
+      tags: [Notifications]
+      responses: { '200': { description: Notification marked read } }
