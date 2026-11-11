@@ -13,6 +13,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
+ * @property RequestStatus $status
  * @property-read User $requester
  * @property-read User|null $assignee
  */
