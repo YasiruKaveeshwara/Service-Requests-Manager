@@ -8,11 +8,13 @@ use App\Enums\ActivityEvent;
 use App\Enums\ManagerDecision;
 use App\Enums\RequestNotificationType;
 use App\Enums\RequestStatus;
+use App\Enums\UserRole;
 use App\Exceptions\WorkflowException;
 use App\Jobs\SendRequestNotificationsJob;
 use App\Models\ServiceRequest;
 use App\Models\User;
 use Closure;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 
@@ -95,6 +97,60 @@ final class RequestWorkflowService
             $this->moveTo($locked, $actor, $target, $comment);
 
             return $decision->notificationType();
+        });
+    }
+
+    public function assign(ServiceRequest $serviceRequest, User $actor, User $assignee, ?string $comment = null): ServiceRequest
+    {
+        return $this->run($serviceRequest, $actor, function (ServiceRequest $locked) use ($actor, $assignee, $comment): RequestNotificationType {
+            if (! in_array($locked->status, [RequestStatus::Approved, RequestStatus::InProgress], true)) {
+                throw WorkflowException::because('An owner can only be assigned while the request is approved or in progress.');
+            }
+
+            if ($assignee->role !== UserRole::Operations) {
+                throw WorkflowException::because('The assignee must be an operations user.');
+            }
+
+            if ($locked->assignee_id === $assignee->id) {
+                throw WorkflowException::because('The request is already assigned to this user.');
+            }
+
+            $previousId = $locked->assignee_id;
+            $locked->forceFill(['assignee_id' => $assignee->id])->save();
+
+            $this->activity->log(
+                $locked,
+                $actor,
+                $previousId === null ? ActivityEvent::Assigned : ActivityEvent::Reassigned,
+                comment: $comment,
+                metadata: ['from_assignee_id' => $previousId, 'to_assignee_id' => $assignee->id, 'to_assignee_name' => $assignee->name],
+            );
+
+            return RequestNotificationType::Assigned;
+        });
+    }
+
+    public function changeStatus(ServiceRequest $serviceRequest, User $actor, RequestStatus $target, ?string $comment = null): ServiceRequest
+    {
+        return $this->run($serviceRequest, $actor, function (ServiceRequest $locked) use ($actor, $target, $comment): RequestNotificationType {
+            if (! in_array($target, [RequestStatus::InProgress, RequestStatus::Completed], true)) {
+                throw WorkflowException::because('Status can only be changed to in progress or completed.');
+            }
+
+            $this->assertTransition($locked, $target);
+
+            if ($locked->assignee_id === null) {
+                throw WorkflowException::because('Assign an owner before starting or completing work.');
+            }
+
+            if ($locked->assignee_id !== $actor->id) {
+                throw new AuthorizationException('Only the assignee can change the status of this request.');
+            }
+
+            $completed = $target === RequestStatus::Completed;
+            $this->moveTo($locked, $actor, $target, $comment, $completed ? ['completed_at' => now()] : []);
+
+            return $completed ? RequestNotificationType::Completed : RequestNotificationType::Started;
         });
     }
 
