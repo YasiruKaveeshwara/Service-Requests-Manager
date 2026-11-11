@@ -12,6 +12,10 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
+/**
+ * @property-read User $requester
+ * @property-read User|null $assignee
+ */
 class ServiceRequest extends Model
 {
     use HasFactory;
@@ -21,6 +25,14 @@ class ServiceRequest extends Model
     protected $fillable = ['title', 'description', 'category', 'priority'];
 
     protected $attributes = ['status' => 'draft', 'priority' => 'medium'];
+
+    protected static function booted(): void
+    {
+        static::deleting(function (self $serviceRequest): void {
+            $serviceRequest->comments()->delete();
+            $serviceRequest->activityLogs()->delete();
+        });
+    }
 
     protected function casts(): array
     {
