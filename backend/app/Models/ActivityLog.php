@@ -9,7 +9,14 @@ use App\Enums\RequestStatus;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Carbon;
 
+/**
+ * @property ActivityEvent $event
+ * @property RequestStatus|null $from_status
+ * @property RequestStatus|null $to_status
+ * @property Carbon $created_at
+ */
 class ActivityLog extends Model
 {
     use HasFactory;
