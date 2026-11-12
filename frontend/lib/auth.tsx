@@ -18,7 +18,7 @@ const AuthContext = createContext<AuthContextValue | null>(null);
 export function AuthProvider({ children }: { children: ReactNode }) {
 	const queryClient = useQueryClient();
 	const [user, setUser] = useState<User | null>(null);
-	const [loading, setLoading] = useState(true);
+	const [loading, setLoading] = useState(() => tokenStore.get() !== null);
 
 	useEffect(() => {
 		const handleUnauthorized = () => setUser(null);
@@ -26,7 +26,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
 		const token = tokenStore.get();
 		if (!token) {
-			setLoading(false);
+			return () => window.removeEventListener(UNAUTHORIZED_EVENT, handleUnauthorized);
 		} else {
 			apiFetch<Single<User>>("/me")
 				.then((response) => setUser(response.data))
