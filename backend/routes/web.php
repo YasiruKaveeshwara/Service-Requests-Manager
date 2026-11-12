@@ -2,8 +2,8 @@
 
 declare(strict_types=1);
 
-use App\Http\Controllers\DocsController;
 use App\Http\Controllers\Api\HealthController;
+use App\Http\Controllers\DocsController;
 use Illuminate\Support\Facades\Route;
 
 Route::redirect('/', '/docs');

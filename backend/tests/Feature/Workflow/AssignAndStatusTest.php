@@ -3,9 +3,8 @@
 declare(strict_types=1);
 
 use App\Enums\ActivityEvent;
-use App\Enums\RequestNotificationType;
+use App\Enums\ManagerDecision;
 use App\Enums\RequestStatus;
-use App\Enums\UserRole;
 use App\Exceptions\WorkflowException;
 use App\Jobs\SendRequestNotificationsJob;
 use App\Models\ServiceRequest;
@@ -104,7 +103,7 @@ it('runs the complete workflow lifecycle', function () {
     $request = $service->create($employee, ['title' => 'Access', 'description' => 'Needs access.', 'category' => 'access', 'priority' => 'medium']);
 
     $service->submit($request, $employee);
-    $service->decide($request->fresh(), $manager, App\Enums\ManagerDecision::Approve);
+    $service->decide($request->fresh(), $manager, ManagerDecision::Approve);
     $service->assign($request->fresh(), $manager, $ops);
     $service->changeStatus($request->fresh(), $ops, RequestStatus::InProgress);
     $service->changeStatus($request->fresh(), $ops, RequestStatus::Completed);

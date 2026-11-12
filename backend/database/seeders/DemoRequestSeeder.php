@@ -7,6 +7,8 @@ namespace Database\Seeders;
 use App\Enums\ManagerDecision;
 use App\Enums\RequestCategory;
 use App\Enums\RequestPriority;
+use App\Enums\RequestStatus;
+use App\Models\ServiceRequest;
 use App\Models\User;
 use App\Services\CommentService;
 use App\Services\RequestWorkflowService;
@@ -24,7 +26,7 @@ final class DemoRequestSeeder extends Seeder
         $olivia = User::query()->where('email', 'ops1@quantix.test')->firstOrFail();
         $oscar = User::query()->where('email', 'ops2@quantix.test')->firstOrFail();
 
-        $make = function (User $requester, string $title, RequestCategory $category, RequestPriority $priority, string $description) use ($workflow): \App\Models\ServiceRequest {
+        $make = function (User $requester, string $title, RequestCategory $category, RequestPriority $priority, string $description) use ($workflow): ServiceRequest {
             return $workflow->create($requester, [
                 'title' => $title,
                 'description' => $description,
@@ -50,15 +52,15 @@ final class DemoRequestSeeder extends Seeder
         $request = $workflow->create($ethan, ['title' => 'Laptop battery replacement', 'description' => 'The laptop battery is failing.', 'category' => 'equipment', 'priority' => 'high'], true);
         $workflow->decide($request, $maya, ManagerDecision::Approve);
         $workflow->assign($request, $maya, $olivia);
-        $workflow->changeStatus($request, $olivia, \App\Enums\RequestStatus::InProgress);
+        $workflow->changeStatus($request, $olivia, RequestStatus::InProgress);
         $comments->add($request, $ethan, 'Any update on the ETA?');
         $comments->add($request, $olivia, 'Battery arrives Thursday.');
 
         $request = $workflow->create($emma, ['title' => 'Fix flickering light in kitchen', 'description' => 'The kitchen light flickers.', 'category' => 'maintenance', 'priority' => 'low'], true);
         $workflow->decide($request, $maya, ManagerDecision::Approve);
         $workflow->assign($request, $maya, $oscar);
-        $workflow->changeStatus($request, $oscar, \App\Enums\RequestStatus::InProgress);
-        $workflow->changeStatus($request, $oscar, \App\Enums\RequestStatus::Completed, 'Replaced the tube.');
+        $workflow->changeStatus($request, $oscar, RequestStatus::InProgress);
+        $workflow->changeStatus($request, $oscar, RequestStatus::Completed, 'Replaced the tube.');
 
         $request = $workflow->create($ethan, ['title' => 'Office espresso machine', 'description' => 'An espresso machine for the office.', 'category' => 'equipment', 'priority' => 'low'], true);
         $workflow->decide($request, $maya, ManagerDecision::Reject, 'Out of budget this quarter.');

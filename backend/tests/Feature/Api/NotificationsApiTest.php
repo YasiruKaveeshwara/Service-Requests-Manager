@@ -2,7 +2,6 @@
 
 declare(strict_types=1);
 
-use App\Models\ServiceRequest;
 use App\Models\User;
 use Illuminate\Notifications\DatabaseNotification;
 use Illuminate\Support\Str;
