@@ -71,6 +71,13 @@ export interface ServiceRequest {
 	abilities: Abilities;
 }
 
+export interface ServiceRequestInput {
+	title: string;
+	description: string;
+	category: Category;
+	priority: Priority;
+}
+
 export interface AppNotification {
 	id: string;
 	type: string | null;
