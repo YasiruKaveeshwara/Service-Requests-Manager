@@ -1,1975 +1,1794 @@
 {
-  "info": {
-    "name": "Quantix Service Requests API",
-    "description": "Run the folders in order with the Collection Runner on a freshly seeded database (php artisan migrate:fresh --seed).",
-    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
-  },
-  "variable": [
-    {
-      "key": "baseUrl",
-      "value": "http://localhost:5000/api"
+    "info": {
+        "name": "Service Requests Manager API",
+        "description": "Run the folders in order with the Collection Runner on a freshly seeded database (php artisan migrate:fresh --seed).",
+        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
     },
-    {
-      "key": "employeeToken",
-      "value": ""
-    },
-    {
-      "key": "otherEmployeeToken",
-      "value": ""
-    },
-    {
-      "key": "managerToken",
-      "value": ""
-    },
-    {
-      "key": "otherManagerToken",
-      "value": ""
-    },
-    {
-      "key": "opsToken",
-      "value": ""
-    },
-    {
-      "key": "requestId",
-      "value": ""
-    },
-    {
-      "key": "withdrawId",
-      "value": ""
-    },
-    {
-      "key": "opsUserId",
-      "value": ""
-    }
-  ],
-  "item": [
-    {
-      "name": "00 Auth (run first)",
-      "item": [
+    "variable": [
         {
-          "name": "Health",
-          "request": {
-            "method": "GET",
-            "header": [
-              {
-                "key": "Accept",
-                "value": "application/json"
-              }
-            ],
-            "url": {
-              "raw": "{{baseUrl}}/health",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "health"
-              ]
-            }
-          },
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "type": "text/javascript",
-                "exec": [
-                  "pm.test('Status is 200', () => pm.response.to.have.status(200));"
-                ]
-              }
-            }
-          ]
+            "key": "baseUrl",
+            "value": "http://localhost:5000/api"
         },
         {
-          "name": "Login employee (Ethan)",
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Accept",
-                "value": "application/json"
-              },
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "url": {
-              "raw": "{{baseUrl}}/login",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "login"
-              ]
-            },
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"email\": \"employee1@quantix.test\",\n  \"password\": \"password\"\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            }
-          },
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "type": "text/javascript",
-                "exec": [
-                  "pm.test('Status is 200', () => pm.response.to.have.status(200));",
-                  "pm.collectionVariables.set('employeeToken', pm.response.json().data.token);"
-                ]
-              }
-            }
-          ]
+            "key": "employeeToken",
+            "value": ""
         },
         {
-          "name": "Login other employee (Ella, other team)",
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Accept",
-                "value": "application/json"
-              },
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "url": {
-              "raw": "{{baseUrl}}/login",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "login"
-              ]
-            },
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"email\": \"employee3@quantix.test\",\n  \"password\": \"password\"\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            }
-          },
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "type": "text/javascript",
-                "exec": [
-                  "pm.test('Status is 200', () => pm.response.to.have.status(200));",
-                  "pm.collectionVariables.set('otherEmployeeToken', pm.response.json().data.token);"
-                ]
-              }
-            }
-          ]
+            "key": "otherEmployeeToken",
+            "value": ""
         },
         {
-          "name": "Login manager (Maya)",
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Accept",
-                "value": "application/json"
-              },
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "url": {
-              "raw": "{{baseUrl}}/login",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "login"
-              ]
-            },
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"email\": \"manager@quantix.test\",\n  \"password\": \"password\"\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            }
-          },
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "type": "text/javascript",
-                "exec": [
-                  "pm.test('Status is 200', () => pm.response.to.have.status(200));",
-                  "pm.collectionVariables.set('managerToken', pm.response.json().data.token);"
-                ]
-              }
-            }
-          ]
+            "key": "managerToken",
+            "value": ""
         },
         {
-          "name": "Login other manager (Marcus)",
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Accept",
-                "value": "application/json"
-              },
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "url": {
-              "raw": "{{baseUrl}}/login",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "login"
-              ]
-            },
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"email\": \"manager2@quantix.test\",\n  \"password\": \"password\"\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            }
-          },
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "type": "text/javascript",
-                "exec": [
-                  "pm.test('Status is 200', () => pm.response.to.have.status(200));",
-                  "pm.collectionVariables.set('otherManagerToken', pm.response.json().data.token);"
-                ]
-              }
-            }
-          ]
+            "key": "otherManagerToken",
+            "value": ""
         },
         {
-          "name": "Login operations (Olivia)",
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Accept",
-                "value": "application/json"
-              },
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "url": {
-              "raw": "{{baseUrl}}/login",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "login"
-              ]
-            },
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"email\": \"ops1@quantix.test\",\n  \"password\": \"password\"\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            }
-          },
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "type": "text/javascript",
-                "exec": [
-                  "pm.test('Status is 200', () => pm.response.to.have.status(200));",
-                  "pm.collectionVariables.set('opsToken', pm.response.json().data.token);",
-                  "pm.collectionVariables.set('opsUserId', pm.response.json().data.user.id);"
-                ]
-              }
-            }
-          ]
+            "key": "opsToken",
+            "value": ""
         },
         {
-          "name": "Me (employee)",
-          "request": {
-            "method": "GET",
-            "header": [
-              {
-                "key": "Accept",
-                "value": "application/json"
-              }
-            ],
-            "url": {
-              "raw": "{{baseUrl}}/me",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "me"
-              ]
-            },
-            "auth": {
-              "type": "bearer",
-              "bearer": [
-                {
-                  "key": "token",
-                  "value": "{{employeeToken}}",
-                  "type": "string"
-                }
-              ]
-            }
-          },
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "type": "text/javascript",
-                "exec": [
-                  "pm.test('Status is 200', () => pm.response.to.have.status(200));",
-                  "pm.test(\"role is employee\", () => pm.expect(pm.response.json().data.role === 'employee').to.be.true);"
-                ]
-              }
-            }
-          ]
+            "key": "requestId",
+            "value": ""
+        },
+        {
+            "key": "withdrawId",
+            "value": ""
+        },
+        {
+            "key": "opsUserId",
+            "value": ""
         }
-      ]
-    },
-    {
-      "name": "01 Employee creates and submits",
-      "item": [
+    ],
+    "item": [
         {
-          "name": "Create draft",
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Accept",
-                "value": "application/json"
-              },
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "url": {
-              "raw": "{{baseUrl}}/requests",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "requests"
-              ]
-            },
-            "auth": {
-              "type": "bearer",
-              "bearer": [
+            "name": "00 Auth (run first)",
+            "item": [
                 {
-                  "key": "token",
-                  "value": "{{employeeToken}}",
-                  "type": "string"
-                }
-              ]
-            },
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"title\": \"Ergonomic keyboard\",\n  \"description\": \"Wrist pain with the current keyboard. Need an ergonomic one.\",\n  \"category\": \"equipment\",\n  \"priority\": \"medium\"\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            }
-          },
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "type": "text/javascript",
-                "exec": [
-                  "pm.test('Status is 201', () => pm.response.to.have.status(201));",
-                  "pm.collectionVariables.set('requestId', pm.response.json().data.id);",
-                  "pm.test(\"is draft\", () => pm.expect(pm.response.json().data.status === 'draft').to.be.true);"
-                ]
-              }
-            }
-          ]
-        },
-        {
-          "name": "Edit draft",
-          "request": {
-            "method": "PUT",
-            "header": [
-              {
-                "key": "Accept",
-                "value": "application/json"
-              },
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "url": {
-              "raw": "{{baseUrl}}/requests/{{requestId}}",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "requests",
-                "{{requestId}}"
-              ]
-            },
-            "auth": {
-              "type": "bearer",
-              "bearer": [
-                {
-                  "key": "token",
-                  "value": "{{employeeToken}}",
-                  "type": "string"
-                }
-              ]
-            },
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"title\": \"Ergonomic split keyboard\",\n  \"description\": \"Wrist pain with the current keyboard. Need a split ergonomic one.\",\n  \"category\": \"equipment\",\n  \"priority\": \"high\"\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            }
-          },
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "type": "text/javascript",
-                "exec": [
-                  "pm.test('Status is 200', () => pm.response.to.have.status(200));",
-                  "pm.test(\"title updated\", () => pm.expect(pm.response.json().data.title === 'Ergonomic split keyboard').to.be.true);"
-                ]
-              }
-            }
-          ]
-        },
-        {
-          "name": "Submit for review",
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Accept",
-                "value": "application/json"
-              },
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "url": {
-              "raw": "{{baseUrl}}/requests/{{requestId}}/submit",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "requests",
-                "{{requestId}}",
-                "submit"
-              ]
-            },
-            "auth": {
-              "type": "bearer",
-              "bearer": [
-                {
-                  "key": "token",
-                  "value": "{{employeeToken}}",
-                  "type": "string"
-                }
-              ]
-            },
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"comment\": \"Please review.\"\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            }
-          },
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "type": "text/javascript",
-                "exec": [
-                  "pm.test('Status is 200', () => pm.response.to.have.status(200));",
-                  "pm.test(\"is submitted\", () => pm.expect(pm.response.json().data.status === 'submitted').to.be.true);"
-                ]
-              }
-            }
-          ]
-        },
-        {
-          "name": "List my requests (search + sort)",
-          "request": {
-            "method": "GET",
-            "header": [
-              {
-                "key": "Accept",
-                "value": "application/json"
-              }
-            ],
-            "url": {
-              "raw": "{{baseUrl}}/requests?search=keyboard&sort=created_at&direction=desc&per_page=10",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "requests"
-              ],
-              "query": [
-                {
-                  "key": "search",
-                  "value": "keyboard"
+                    "name": "Health",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{baseUrl}}/health",
+                            "host": ["{{baseUrl}}"],
+                            "path": ["health"]
+                        }
+                    },
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "type": "text/javascript",
+                                "exec": [
+                                    "pm.test('Status is 200', () => pm.response.to.have.status(200));"
+                                ]
+                            }
+                        }
+                    ]
                 },
                 {
-                  "key": "sort",
-                  "value": "created_at"
+                    "name": "Login employee (Ethan)",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{baseUrl}}/login",
+                            "host": ["{{baseUrl}}"],
+                            "path": ["login"]
+                        },
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"email\": \"employee1@service-requests.test\",\n  \"password\": \"password\"\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        }
+                    },
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "type": "text/javascript",
+                                "exec": [
+                                    "pm.test('Status is 200', () => pm.response.to.have.status(200));",
+                                    "pm.collectionVariables.set('employeeToken', pm.response.json().data.token);"
+                                ]
+                            }
+                        }
+                    ]
                 },
                 {
-                  "key": "direction",
-                  "value": "desc"
+                    "name": "Login other employee (Ella, other team)",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{baseUrl}}/login",
+                            "host": ["{{baseUrl}}"],
+                            "path": ["login"]
+                        },
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"email\": \"employee3@service-requests.test\",\n  \"password\": \"password\"\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        }
+                    },
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "type": "text/javascript",
+                                "exec": [
+                                    "pm.test('Status is 200', () => pm.response.to.have.status(200));",
+                                    "pm.collectionVariables.set('otherEmployeeToken', pm.response.json().data.token);"
+                                ]
+                            }
+                        }
+                    ]
                 },
                 {
-                  "key": "per_page",
-                  "value": "10"
-                }
-              ]
-            },
-            "auth": {
-              "type": "bearer",
-              "bearer": [
+                    "name": "Login manager (Maya)",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{baseUrl}}/login",
+                            "host": ["{{baseUrl}}"],
+                            "path": ["login"]
+                        },
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"email\": \"manager@service-requests.test\",\n  \"password\": \"password\"\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        }
+                    },
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "type": "text/javascript",
+                                "exec": [
+                                    "pm.test('Status is 200', () => pm.response.to.have.status(200));",
+                                    "pm.collectionVariables.set('managerToken', pm.response.json().data.token);"
+                                ]
+                            }
+                        }
+                    ]
+                },
                 {
-                  "key": "token",
-                  "value": "{{employeeToken}}",
-                  "type": "string"
+                    "name": "Login other manager (Marcus)",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{baseUrl}}/login",
+                            "host": ["{{baseUrl}}"],
+                            "path": ["login"]
+                        },
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"email\": \"manager2@service-requests.test\",\n  \"password\": \"password\"\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        }
+                    },
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "type": "text/javascript",
+                                "exec": [
+                                    "pm.test('Status is 200', () => pm.response.to.have.status(200));",
+                                    "pm.collectionVariables.set('otherManagerToken', pm.response.json().data.token);"
+                                ]
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "Login operations (Olivia)",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{baseUrl}}/login",
+                            "host": ["{{baseUrl}}"],
+                            "path": ["login"]
+                        },
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"email\": \"ops1@service-requests.test\",\n  \"password\": \"password\"\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        }
+                    },
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "type": "text/javascript",
+                                "exec": [
+                                    "pm.test('Status is 200', () => pm.response.to.have.status(200));",
+                                    "pm.collectionVariables.set('opsToken', pm.response.json().data.token);",
+                                    "pm.collectionVariables.set('opsUserId', pm.response.json().data.user.id);"
+                                ]
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "Me (employee)",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{baseUrl}}/me",
+                            "host": ["{{baseUrl}}"],
+                            "path": ["me"]
+                        },
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{employeeToken}}",
+                                    "type": "string"
+                                }
+                            ]
+                        }
+                    },
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "type": "text/javascript",
+                                "exec": [
+                                    "pm.test('Status is 200', () => pm.response.to.have.status(200));",
+                                    "pm.test(\"role is employee\", () => pm.expect(pm.response.json().data.role === 'employee').to.be.true);"
+                                ]
+                            }
+                        }
+                    ]
                 }
-              ]
-            }
-          },
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "type": "text/javascript",
-                "exec": [
-                  "pm.test('Status is 200', () => pm.response.to.have.status(200));",
-                  "pm.test(\"has pagination meta\", () => pm.expect(pm.response.json().meta.total >= 1).to.be.true);"
-                ]
-              }
-            }
-          ]
+            ]
+        },
+        {
+            "name": "01 Employee creates and submits",
+            "item": [
+                {
+                    "name": "Create draft",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{baseUrl}}/requests",
+                            "host": ["{{baseUrl}}"],
+                            "path": ["requests"]
+                        },
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{employeeToken}}",
+                                    "type": "string"
+                                }
+                            ]
+                        },
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"title\": \"Ergonomic keyboard\",\n  \"description\": \"Wrist pain with the current keyboard. Need an ergonomic one.\",\n  \"category\": \"equipment\",\n  \"priority\": \"medium\"\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        }
+                    },
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "type": "text/javascript",
+                                "exec": [
+                                    "pm.test('Status is 201', () => pm.response.to.have.status(201));",
+                                    "pm.collectionVariables.set('requestId', pm.response.json().data.id);",
+                                    "pm.test(\"is draft\", () => pm.expect(pm.response.json().data.status === 'draft').to.be.true);"
+                                ]
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "Edit draft",
+                    "request": {
+                        "method": "PUT",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{baseUrl}}/requests/{{requestId}}",
+                            "host": ["{{baseUrl}}"],
+                            "path": ["requests", "{{requestId}}"]
+                        },
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{employeeToken}}",
+                                    "type": "string"
+                                }
+                            ]
+                        },
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"title\": \"Ergonomic split keyboard\",\n  \"description\": \"Wrist pain with the current keyboard. Need a split ergonomic one.\",\n  \"category\": \"equipment\",\n  \"priority\": \"high\"\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        }
+                    },
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "type": "text/javascript",
+                                "exec": [
+                                    "pm.test('Status is 200', () => pm.response.to.have.status(200));",
+                                    "pm.test(\"title updated\", () => pm.expect(pm.response.json().data.title === 'Ergonomic split keyboard').to.be.true);"
+                                ]
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "Submit for review",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{baseUrl}}/requests/{{requestId}}/submit",
+                            "host": ["{{baseUrl}}"],
+                            "path": ["requests", "{{requestId}}", "submit"]
+                        },
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{employeeToken}}",
+                                    "type": "string"
+                                }
+                            ]
+                        },
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"comment\": \"Please review.\"\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        }
+                    },
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "type": "text/javascript",
+                                "exec": [
+                                    "pm.test('Status is 200', () => pm.response.to.have.status(200));",
+                                    "pm.test(\"is submitted\", () => pm.expect(pm.response.json().data.status === 'submitted').to.be.true);"
+                                ]
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "List my requests (search + sort)",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{baseUrl}}/requests?search=keyboard&sort=created_at&direction=desc&per_page=10",
+                            "host": ["{{baseUrl}}"],
+                            "path": ["requests"],
+                            "query": [
+                                {
+                                    "key": "search",
+                                    "value": "keyboard"
+                                },
+                                {
+                                    "key": "sort",
+                                    "value": "created_at"
+                                },
+                                {
+                                    "key": "direction",
+                                    "value": "desc"
+                                },
+                                {
+                                    "key": "per_page",
+                                    "value": "10"
+                                }
+                            ]
+                        },
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{employeeToken}}",
+                                    "type": "string"
+                                }
+                            ]
+                        }
+                    },
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "type": "text/javascript",
+                                "exec": [
+                                    "pm.test('Status is 200', () => pm.response.to.have.status(200));",
+                                    "pm.test(\"has pagination meta\", () => pm.expect(pm.response.json().meta.total >= 1).to.be.true);"
+                                ]
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "02 Manager reviews (return, then approve)",
+            "item": [
+                {
+                    "name": "List submitted requests of my team",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{baseUrl}}/requests?status=submitted",
+                            "host": ["{{baseUrl}}"],
+                            "path": ["requests"],
+                            "query": [
+                                {
+                                    "key": "status",
+                                    "value": "submitted"
+                                }
+                            ]
+                        },
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{managerToken}}",
+                                    "type": "string"
+                                }
+                            ]
+                        }
+                    },
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "type": "text/javascript",
+                                "exec": [
+                                    "pm.test('Status is 200', () => pm.response.to.have.status(200));"
+                                ]
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "Return with comment",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{baseUrl}}/requests/{{requestId}}/decision",
+                            "host": ["{{baseUrl}}"],
+                            "path": ["requests", "{{requestId}}", "decision"]
+                        },
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{managerToken}}",
+                                    "type": "string"
+                                }
+                            ]
+                        },
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"decision\": \"return\",\n  \"comment\": \"Please add the preferred model and budget.\"\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        }
+                    },
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "type": "text/javascript",
+                                "exec": [
+                                    "pm.test('Status is 200', () => pm.response.to.have.status(200));",
+                                    "pm.test(\"is returned\", () => pm.expect(pm.response.json().data.status === 'returned').to.be.true);"
+                                ]
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "Employee edits returned request",
+                    "request": {
+                        "method": "PUT",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{baseUrl}}/requests/{{requestId}}",
+                            "host": ["{{baseUrl}}"],
+                            "path": ["requests", "{{requestId}}"]
+                        },
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{employeeToken}}",
+                                    "type": "string"
+                                }
+                            ]
+                        },
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"title\": \"Ergonomic split keyboard\",\n  \"description\": \"Model: Kinesis Freestyle2. Budget: 120 USD.\",\n  \"category\": \"equipment\",\n  \"priority\": \"high\"\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        }
+                    },
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "type": "text/javascript",
+                                "exec": [
+                                    "pm.test('Status is 200', () => pm.response.to.have.status(200));"
+                                ]
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "Employee resubmits",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{baseUrl}}/requests/{{requestId}}/submit",
+                            "host": ["{{baseUrl}}"],
+                            "path": ["requests", "{{requestId}}", "submit"]
+                        },
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{employeeToken}}",
+                                    "type": "string"
+                                }
+                            ]
+                        },
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        }
+                    },
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "type": "text/javascript",
+                                "exec": [
+                                    "pm.test('Status is 200', () => pm.response.to.have.status(200));"
+                                ]
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "Approve",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{baseUrl}}/requests/{{requestId}}/decision",
+                            "host": ["{{baseUrl}}"],
+                            "path": ["requests", "{{requestId}}", "decision"]
+                        },
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{managerToken}}",
+                                    "type": "string"
+                                }
+                            ]
+                        },
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"decision\": \"approve\",\n  \"comment\": \"Approved.\"\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        }
+                    },
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "type": "text/javascript",
+                                "exec": [
+                                    "pm.test('Status is 200', () => pm.response.to.have.status(200));",
+                                    "pm.test(\"is approved\", () => pm.expect(pm.response.json().data.status === 'approved').to.be.true);"
+                                ]
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "03 Operations works the request",
+            "item": [
+                {
+                    "name": "List approved requests",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{baseUrl}}/requests?status=approved",
+                            "host": ["{{baseUrl}}"],
+                            "path": ["requests"],
+                            "query": [
+                                {
+                                    "key": "status",
+                                    "value": "approved"
+                                }
+                            ]
+                        },
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{opsToken}}",
+                                    "type": "string"
+                                }
+                            ]
+                        }
+                    },
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "type": "text/javascript",
+                                "exec": [
+                                    "pm.test('Status is 200', () => pm.response.to.have.status(200));"
+                                ]
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "List operations users (for assign)",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{baseUrl}}/users?role=operations",
+                            "host": ["{{baseUrl}}"],
+                            "path": ["users"],
+                            "query": [
+                                {
+                                    "key": "role",
+                                    "value": "operations"
+                                }
+                            ]
+                        },
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{opsToken}}",
+                                    "type": "string"
+                                }
+                            ]
+                        }
+                    },
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "type": "text/javascript",
+                                "exec": [
+                                    "pm.test('Status is 200', () => pm.response.to.have.status(200));",
+                                    "pm.test(\"has users\", () => pm.expect(pm.response.json().data.length >= 1).to.be.true);"
+                                ]
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "Assign owner (myself)",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{baseUrl}}/requests/{{requestId}}/assign",
+                            "host": ["{{baseUrl}}"],
+                            "path": ["requests", "{{requestId}}", "assign"]
+                        },
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{opsToken}}",
+                                    "type": "string"
+                                }
+                            ]
+                        },
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"assignee_id\": {{opsUserId}},\n  \"comment\": \"I will take this one.\"\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        }
+                    },
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "type": "text/javascript",
+                                "exec": [
+                                    "pm.test('Status is 200', () => pm.response.to.have.status(200));",
+                                    "pm.test(\"assignee set\", () => pm.expect(pm.response.json().data.assignee !== null).to.be.true);"
+                                ]
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "Start work",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{baseUrl}}/requests/{{requestId}}/status",
+                            "host": ["{{baseUrl}}"],
+                            "path": ["requests", "{{requestId}}", "status"]
+                        },
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{opsToken}}",
+                                    "type": "string"
+                                }
+                            ]
+                        },
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"status\": \"in_progress\"\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        }
+                    },
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "type": "text/javascript",
+                                "exec": [
+                                    "pm.test('Status is 200', () => pm.response.to.have.status(200));",
+                                    "pm.test(\"is in progress\", () => pm.expect(pm.response.json().data.status === 'in_progress').to.be.true);"
+                                ]
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "Employee adds a comment",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{baseUrl}}/requests/{{requestId}}/comments",
+                            "host": ["{{baseUrl}}"],
+                            "path": ["requests", "{{requestId}}", "comments"]
+                        },
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{employeeToken}}",
+                                    "type": "string"
+                                }
+                            ]
+                        },
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"body\": \"Any ETA?\"\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        }
+                    },
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "type": "text/javascript",
+                                "exec": [
+                                    "pm.test('Status is 201', () => pm.response.to.have.status(201));"
+                                ]
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "Complete",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{baseUrl}}/requests/{{requestId}}/status",
+                            "host": ["{{baseUrl}}"],
+                            "path": ["requests", "{{requestId}}", "status"]
+                        },
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{opsToken}}",
+                                    "type": "string"
+                                }
+                            ]
+                        },
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"status\": \"completed\",\n  \"comment\": \"Delivered to desk 12.\"\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        }
+                    },
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "type": "text/javascript",
+                                "exec": [
+                                    "pm.test('Status is 200', () => pm.response.to.have.status(200));",
+                                    "pm.test(\"is completed\", () => pm.expect(pm.response.json().data.status === 'completed').to.be.true);"
+                                ]
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "Show with activity history",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{baseUrl}}/requests/{{requestId}}",
+                            "host": ["{{baseUrl}}"],
+                            "path": ["requests", "{{requestId}}"]
+                        },
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{opsToken}}",
+                                    "type": "string"
+                                }
+                            ]
+                        }
+                    },
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "type": "text/javascript",
+                                "exec": [
+                                    "pm.test('Status is 200', () => pm.response.to.have.status(200));",
+                                    "pm.test(\"has at least 8 activity entries\", () => pm.expect(pm.response.json().data.activity.length >= 8).to.be.true);"
+                                ]
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "Activity log (transitions only)",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{baseUrl}}/requests/{{requestId}}/activity?event=transitioned",
+                            "host": ["{{baseUrl}}"],
+                            "path": ["requests", "{{requestId}}", "activity"],
+                            "query": [
+                                {
+                                    "key": "event",
+                                    "value": "transitioned"
+                                }
+                            ]
+                        },
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{opsToken}}",
+                                    "type": "string"
+                                }
+                            ]
+                        }
+                    },
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "type": "text/javascript",
+                                "exec": [
+                                    "pm.test('Status is 200', () => pm.response.to.have.status(200));"
+                                ]
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "04 Withdraw flow",
+            "item": [
+                {
+                    "name": "Create and submit",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{baseUrl}}/requests",
+                            "host": ["{{baseUrl}}"],
+                            "path": ["requests"]
+                        },
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{employeeToken}}",
+                                    "type": "string"
+                                }
+                            ]
+                        },
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"title\": \"Second monitor\",\n  \"description\": \"Need a second monitor.\",\n  \"category\": \"equipment\",\n  \"submit\": true\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        }
+                    },
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "type": "text/javascript",
+                                "exec": [
+                                    "pm.test('Status is 201', () => pm.response.to.have.status(201));",
+                                    "pm.collectionVariables.set('withdrawId', pm.response.json().data.id);"
+                                ]
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "Cancel (withdraw)",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{baseUrl}}/requests/{{withdrawId}}/cancel",
+                            "host": ["{{baseUrl}}"],
+                            "path": ["requests", "{{withdrawId}}", "cancel"]
+                        },
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{employeeToken}}",
+                                    "type": "string"
+                                }
+                            ]
+                        },
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"comment\": \"No longer needed.\"\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        }
+                    },
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "type": "text/javascript",
+                                "exec": [
+                                    "pm.test('Status is 200', () => pm.response.to.have.status(200));",
+                                    "pm.test(\"is cancelled\", () => pm.expect(pm.response.json().data.status === 'cancelled').to.be.true);"
+                                ]
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "Submit cancelled request (expect 422)",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{baseUrl}}/requests/{{withdrawId}}/submit",
+                            "host": ["{{baseUrl}}"],
+                            "path": ["requests", "{{withdrawId}}", "submit"]
+                        },
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{employeeToken}}",
+                                    "type": "string"
+                                }
+                            ]
+                        },
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        }
+                    },
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "type": "text/javascript",
+                                "exec": [
+                                    "pm.test('Status is 422', () => pm.response.to.have.status(422));",
+                                    "pm.test('Error code is invalid_transition', () => pm.expect(pm.response.json().code).to.eql('invalid_transition'));"
+                                ]
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "05 Notifications",
+            "item": [
+                {
+                    "name": "List notifications (manager)",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{baseUrl}}/notifications",
+                            "host": ["{{baseUrl}}"],
+                            "path": ["notifications"]
+                        },
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{managerToken}}",
+                                    "type": "string"
+                                }
+                            ]
+                        }
+                    },
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "type": "text/javascript",
+                                "exec": [
+                                    "pm.test('Status is 200', () => pm.response.to.have.status(200));",
+                                    "pm.test(\"has unread_count\", () => pm.expect(typeof pm.response.json().meta.unread_count === 'number').to.be.true);"
+                                ]
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "Mark all read (manager)",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{baseUrl}}/notifications/read-all",
+                            "host": ["{{baseUrl}}"],
+                            "path": ["notifications", "read-all"]
+                        },
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{managerToken}}",
+                                    "type": "string"
+                                }
+                            ]
+                        },
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        }
+                    },
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "type": "text/javascript",
+                                "exec": [
+                                    "pm.test('Status is 200', () => pm.response.to.have.status(200));"
+                                ]
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "06 Expected errors",
+            "item": [
+                {
+                    "name": "401 without token",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{baseUrl}}/requests",
+                            "host": ["{{baseUrl}}"],
+                            "path": ["requests"]
+                        }
+                    },
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "type": "text/javascript",
+                                "exec": [
+                                    "pm.test('Status is 401', () => pm.response.to.have.status(401));",
+                                    "pm.test('Error code is unauthenticated', () => pm.expect(pm.response.json().code).to.eql('unauthenticated'));"
+                                ]
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "401 wrong password",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{baseUrl}}/login",
+                            "host": ["{{baseUrl}}"],
+                            "path": ["login"]
+                        },
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"email\": \"employee1@service-requests.test\",\n  \"password\": \"wrong\"\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        }
+                    },
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "type": "text/javascript",
+                                "exec": [
+                                    "pm.test('Status is 401', () => pm.response.to.have.status(401));",
+                                    "pm.test('Error code is unauthenticated', () => pm.expect(pm.response.json().code).to.eql('unauthenticated'));"
+                                ]
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "403 employee tries to decide",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{baseUrl}}/requests/{{requestId}}/decision",
+                            "host": ["{{baseUrl}}"],
+                            "path": ["requests", "{{requestId}}", "decision"]
+                        },
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{employeeToken}}",
+                                    "type": "string"
+                                }
+                            ]
+                        },
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"decision\": \"approve\"\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        }
+                    },
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "type": "text/javascript",
+                                "exec": [
+                                    "pm.test('Status is 403', () => pm.response.to.have.status(403));",
+                                    "pm.test('Error code is forbidden', () => pm.expect(pm.response.json().code).to.eql('forbidden'));"
+                                ]
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "403 manager of another team",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{baseUrl}}/requests/{{requestId}}",
+                            "host": ["{{baseUrl}}"],
+                            "path": ["requests", "{{requestId}}"]
+                        },
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{otherManagerToken}}",
+                                    "type": "string"
+                                }
+                            ]
+                        }
+                    },
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "type": "text/javascript",
+                                "exec": [
+                                    "pm.test('Status is 403', () => pm.response.to.have.status(403));",
+                                    "pm.test('Error code is forbidden', () => pm.expect(pm.response.json().code).to.eql('forbidden'));"
+                                ]
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "403 other employee views request",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{baseUrl}}/requests/{{requestId}}",
+                            "host": ["{{baseUrl}}"],
+                            "path": ["requests", "{{requestId}}"]
+                        },
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{otherEmployeeToken}}",
+                                    "type": "string"
+                                }
+                            ]
+                        }
+                    },
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "type": "text/javascript",
+                                "exec": [
+                                    "pm.test('Status is 403', () => pm.response.to.have.status(403));",
+                                    "pm.test('Error code is forbidden', () => pm.expect(pm.response.json().code).to.eql('forbidden'));"
+                                ]
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "404 unknown request",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{baseUrl}}/requests/999999",
+                            "host": ["{{baseUrl}}"],
+                            "path": ["requests", "999999"]
+                        },
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{employeeToken}}",
+                                    "type": "string"
+                                }
+                            ]
+                        }
+                    },
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "type": "text/javascript",
+                                "exec": [
+                                    "pm.test('Status is 404', () => pm.response.to.have.status(404));",
+                                    "pm.test('Error code is not_found', () => pm.expect(pm.response.json().code).to.eql('not_found'));"
+                                ]
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "422 validation (empty create)",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{baseUrl}}/requests",
+                            "host": ["{{baseUrl}}"],
+                            "path": ["requests"]
+                        },
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{employeeToken}}",
+                                    "type": "string"
+                                }
+                            ]
+                        },
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        }
+                    },
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "type": "text/javascript",
+                                "exec": [
+                                    "pm.test('Status is 422', () => pm.response.to.have.status(422));",
+                                    "pm.test('Error code is validation_failed', () => pm.expect(pm.response.json().code).to.eql('validation_failed'));",
+                                    "pm.test(\"has field errors\", () => pm.expect(pm.response.json().errors.title.length > 0).to.be.true);"
+                                ]
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "422 invalid transition (decide on completed)",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{baseUrl}}/requests/{{requestId}}/decision",
+                            "host": ["{{baseUrl}}"],
+                            "path": ["requests", "{{requestId}}", "decision"]
+                        },
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{managerToken}}",
+                                    "type": "string"
+                                }
+                            ]
+                        },
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"decision\": \"approve\"\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        }
+                    },
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "type": "text/javascript",
+                                "exec": [
+                                    "pm.test('Status is 422', () => pm.response.to.have.status(422));",
+                                    "pm.test('Error code is invalid_transition', () => pm.expect(pm.response.json().code).to.eql('invalid_transition'));"
+                                ]
+                            }
+                        }
+                    ]
+                }
+            ]
         }
-      ]
-    },
-    {
-      "name": "02 Manager reviews (return, then approve)",
-      "item": [
-        {
-          "name": "List submitted requests of my team",
-          "request": {
-            "method": "GET",
-            "header": [
-              {
-                "key": "Accept",
-                "value": "application/json"
-              }
-            ],
-            "url": {
-              "raw": "{{baseUrl}}/requests?status=submitted",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "requests"
-              ],
-              "query": [
-                {
-                  "key": "status",
-                  "value": "submitted"
-                }
-              ]
-            },
-            "auth": {
-              "type": "bearer",
-              "bearer": [
-                {
-                  "key": "token",
-                  "value": "{{managerToken}}",
-                  "type": "string"
-                }
-              ]
-            }
-          },
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "type": "text/javascript",
-                "exec": [
-                  "pm.test('Status is 200', () => pm.response.to.have.status(200));"
-                ]
-              }
-            }
-          ]
-        },
-        {
-          "name": "Return with comment",
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Accept",
-                "value": "application/json"
-              },
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "url": {
-              "raw": "{{baseUrl}}/requests/{{requestId}}/decision",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "requests",
-                "{{requestId}}",
-                "decision"
-              ]
-            },
-            "auth": {
-              "type": "bearer",
-              "bearer": [
-                {
-                  "key": "token",
-                  "value": "{{managerToken}}",
-                  "type": "string"
-                }
-              ]
-            },
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"decision\": \"return\",\n  \"comment\": \"Please add the preferred model and budget.\"\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            }
-          },
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "type": "text/javascript",
-                "exec": [
-                  "pm.test('Status is 200', () => pm.response.to.have.status(200));",
-                  "pm.test(\"is returned\", () => pm.expect(pm.response.json().data.status === 'returned').to.be.true);"
-                ]
-              }
-            }
-          ]
-        },
-        {
-          "name": "Employee edits returned request",
-          "request": {
-            "method": "PUT",
-            "header": [
-              {
-                "key": "Accept",
-                "value": "application/json"
-              },
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "url": {
-              "raw": "{{baseUrl}}/requests/{{requestId}}",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "requests",
-                "{{requestId}}"
-              ]
-            },
-            "auth": {
-              "type": "bearer",
-              "bearer": [
-                {
-                  "key": "token",
-                  "value": "{{employeeToken}}",
-                  "type": "string"
-                }
-              ]
-            },
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"title\": \"Ergonomic split keyboard\",\n  \"description\": \"Model: Kinesis Freestyle2. Budget: 120 USD.\",\n  \"category\": \"equipment\",\n  \"priority\": \"high\"\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            }
-          },
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "type": "text/javascript",
-                "exec": [
-                  "pm.test('Status is 200', () => pm.response.to.have.status(200));"
-                ]
-              }
-            }
-          ]
-        },
-        {
-          "name": "Employee resubmits",
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Accept",
-                "value": "application/json"
-              },
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "url": {
-              "raw": "{{baseUrl}}/requests/{{requestId}}/submit",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "requests",
-                "{{requestId}}",
-                "submit"
-              ]
-            },
-            "auth": {
-              "type": "bearer",
-              "bearer": [
-                {
-                  "key": "token",
-                  "value": "{{employeeToken}}",
-                  "type": "string"
-                }
-              ]
-            },
-            "body": {
-              "mode": "raw",
-              "raw": "{}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            }
-          },
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "type": "text/javascript",
-                "exec": [
-                  "pm.test('Status is 200', () => pm.response.to.have.status(200));"
-                ]
-              }
-            }
-          ]
-        },
-        {
-          "name": "Approve",
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Accept",
-                "value": "application/json"
-              },
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "url": {
-              "raw": "{{baseUrl}}/requests/{{requestId}}/decision",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "requests",
-                "{{requestId}}",
-                "decision"
-              ]
-            },
-            "auth": {
-              "type": "bearer",
-              "bearer": [
-                {
-                  "key": "token",
-                  "value": "{{managerToken}}",
-                  "type": "string"
-                }
-              ]
-            },
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"decision\": \"approve\",\n  \"comment\": \"Approved.\"\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            }
-          },
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "type": "text/javascript",
-                "exec": [
-                  "pm.test('Status is 200', () => pm.response.to.have.status(200));",
-                  "pm.test(\"is approved\", () => pm.expect(pm.response.json().data.status === 'approved').to.be.true);"
-                ]
-              }
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "name": "03 Operations works the request",
-      "item": [
-        {
-          "name": "List approved requests",
-          "request": {
-            "method": "GET",
-            "header": [
-              {
-                "key": "Accept",
-                "value": "application/json"
-              }
-            ],
-            "url": {
-              "raw": "{{baseUrl}}/requests?status=approved",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "requests"
-              ],
-              "query": [
-                {
-                  "key": "status",
-                  "value": "approved"
-                }
-              ]
-            },
-            "auth": {
-              "type": "bearer",
-              "bearer": [
-                {
-                  "key": "token",
-                  "value": "{{opsToken}}",
-                  "type": "string"
-                }
-              ]
-            }
-          },
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "type": "text/javascript",
-                "exec": [
-                  "pm.test('Status is 200', () => pm.response.to.have.status(200));"
-                ]
-              }
-            }
-          ]
-        },
-        {
-          "name": "List operations users (for assign)",
-          "request": {
-            "method": "GET",
-            "header": [
-              {
-                "key": "Accept",
-                "value": "application/json"
-              }
-            ],
-            "url": {
-              "raw": "{{baseUrl}}/users?role=operations",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "users"
-              ],
-              "query": [
-                {
-                  "key": "role",
-                  "value": "operations"
-                }
-              ]
-            },
-            "auth": {
-              "type": "bearer",
-              "bearer": [
-                {
-                  "key": "token",
-                  "value": "{{opsToken}}",
-                  "type": "string"
-                }
-              ]
-            }
-          },
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "type": "text/javascript",
-                "exec": [
-                  "pm.test('Status is 200', () => pm.response.to.have.status(200));",
-                  "pm.test(\"has users\", () => pm.expect(pm.response.json().data.length >= 1).to.be.true);"
-                ]
-              }
-            }
-          ]
-        },
-        {
-          "name": "Assign owner (myself)",
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Accept",
-                "value": "application/json"
-              },
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "url": {
-              "raw": "{{baseUrl}}/requests/{{requestId}}/assign",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "requests",
-                "{{requestId}}",
-                "assign"
-              ]
-            },
-            "auth": {
-              "type": "bearer",
-              "bearer": [
-                {
-                  "key": "token",
-                  "value": "{{opsToken}}",
-                  "type": "string"
-                }
-              ]
-            },
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"assignee_id\": {{opsUserId}},\n  \"comment\": \"I will take this one.\"\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            }
-          },
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "type": "text/javascript",
-                "exec": [
-                  "pm.test('Status is 200', () => pm.response.to.have.status(200));",
-                  "pm.test(\"assignee set\", () => pm.expect(pm.response.json().data.assignee !== null).to.be.true);"
-                ]
-              }
-            }
-          ]
-        },
-        {
-          "name": "Start work",
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Accept",
-                "value": "application/json"
-              },
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "url": {
-              "raw": "{{baseUrl}}/requests/{{requestId}}/status",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "requests",
-                "{{requestId}}",
-                "status"
-              ]
-            },
-            "auth": {
-              "type": "bearer",
-              "bearer": [
-                {
-                  "key": "token",
-                  "value": "{{opsToken}}",
-                  "type": "string"
-                }
-              ]
-            },
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"status\": \"in_progress\"\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            }
-          },
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "type": "text/javascript",
-                "exec": [
-                  "pm.test('Status is 200', () => pm.response.to.have.status(200));",
-                  "pm.test(\"is in progress\", () => pm.expect(pm.response.json().data.status === 'in_progress').to.be.true);"
-                ]
-              }
-            }
-          ]
-        },
-        {
-          "name": "Employee adds a comment",
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Accept",
-                "value": "application/json"
-              },
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "url": {
-              "raw": "{{baseUrl}}/requests/{{requestId}}/comments",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "requests",
-                "{{requestId}}",
-                "comments"
-              ]
-            },
-            "auth": {
-              "type": "bearer",
-              "bearer": [
-                {
-                  "key": "token",
-                  "value": "{{employeeToken}}",
-                  "type": "string"
-                }
-              ]
-            },
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"body\": \"Any ETA?\"\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            }
-          },
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "type": "text/javascript",
-                "exec": [
-                  "pm.test('Status is 201', () => pm.response.to.have.status(201));"
-                ]
-              }
-            }
-          ]
-        },
-        {
-          "name": "Complete",
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Accept",
-                "value": "application/json"
-              },
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "url": {
-              "raw": "{{baseUrl}}/requests/{{requestId}}/status",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "requests",
-                "{{requestId}}",
-                "status"
-              ]
-            },
-            "auth": {
-              "type": "bearer",
-              "bearer": [
-                {
-                  "key": "token",
-                  "value": "{{opsToken}}",
-                  "type": "string"
-                }
-              ]
-            },
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"status\": \"completed\",\n  \"comment\": \"Delivered to desk 12.\"\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            }
-          },
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "type": "text/javascript",
-                "exec": [
-                  "pm.test('Status is 200', () => pm.response.to.have.status(200));",
-                  "pm.test(\"is completed\", () => pm.expect(pm.response.json().data.status === 'completed').to.be.true);"
-                ]
-              }
-            }
-          ]
-        },
-        {
-          "name": "Show with activity history",
-          "request": {
-            "method": "GET",
-            "header": [
-              {
-                "key": "Accept",
-                "value": "application/json"
-              }
-            ],
-            "url": {
-              "raw": "{{baseUrl}}/requests/{{requestId}}",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "requests",
-                "{{requestId}}"
-              ]
-            },
-            "auth": {
-              "type": "bearer",
-              "bearer": [
-                {
-                  "key": "token",
-                  "value": "{{opsToken}}",
-                  "type": "string"
-                }
-              ]
-            }
-          },
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "type": "text/javascript",
-                "exec": [
-                  "pm.test('Status is 200', () => pm.response.to.have.status(200));",
-                  "pm.test(\"has at least 8 activity entries\", () => pm.expect(pm.response.json().data.activity.length >= 8).to.be.true);"
-                ]
-              }
-            }
-          ]
-        },
-        {
-          "name": "Activity log (transitions only)",
-          "request": {
-            "method": "GET",
-            "header": [
-              {
-                "key": "Accept",
-                "value": "application/json"
-              }
-            ],
-            "url": {
-              "raw": "{{baseUrl}}/requests/{{requestId}}/activity?event=transitioned",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "requests",
-                "{{requestId}}",
-                "activity"
-              ],
-              "query": [
-                {
-                  "key": "event",
-                  "value": "transitioned"
-                }
-              ]
-            },
-            "auth": {
-              "type": "bearer",
-              "bearer": [
-                {
-                  "key": "token",
-                  "value": "{{opsToken}}",
-                  "type": "string"
-                }
-              ]
-            }
-          },
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "type": "text/javascript",
-                "exec": [
-                  "pm.test('Status is 200', () => pm.response.to.have.status(200));"
-                ]
-              }
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "name": "04 Withdraw flow",
-      "item": [
-        {
-          "name": "Create and submit",
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Accept",
-                "value": "application/json"
-              },
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "url": {
-              "raw": "{{baseUrl}}/requests",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "requests"
-              ]
-            },
-            "auth": {
-              "type": "bearer",
-              "bearer": [
-                {
-                  "key": "token",
-                  "value": "{{employeeToken}}",
-                  "type": "string"
-                }
-              ]
-            },
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"title\": \"Second monitor\",\n  \"description\": \"Need a second monitor.\",\n  \"category\": \"equipment\",\n  \"submit\": true\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            }
-          },
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "type": "text/javascript",
-                "exec": [
-                  "pm.test('Status is 201', () => pm.response.to.have.status(201));",
-                  "pm.collectionVariables.set('withdrawId', pm.response.json().data.id);"
-                ]
-              }
-            }
-          ]
-        },
-        {
-          "name": "Cancel (withdraw)",
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Accept",
-                "value": "application/json"
-              },
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "url": {
-              "raw": "{{baseUrl}}/requests/{{withdrawId}}/cancel",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "requests",
-                "{{withdrawId}}",
-                "cancel"
-              ]
-            },
-            "auth": {
-              "type": "bearer",
-              "bearer": [
-                {
-                  "key": "token",
-                  "value": "{{employeeToken}}",
-                  "type": "string"
-                }
-              ]
-            },
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"comment\": \"No longer needed.\"\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            }
-          },
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "type": "text/javascript",
-                "exec": [
-                  "pm.test('Status is 200', () => pm.response.to.have.status(200));",
-                  "pm.test(\"is cancelled\", () => pm.expect(pm.response.json().data.status === 'cancelled').to.be.true);"
-                ]
-              }
-            }
-          ]
-        },
-        {
-          "name": "Submit cancelled request (expect 422)",
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Accept",
-                "value": "application/json"
-              },
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "url": {
-              "raw": "{{baseUrl}}/requests/{{withdrawId}}/submit",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "requests",
-                "{{withdrawId}}",
-                "submit"
-              ]
-            },
-            "auth": {
-              "type": "bearer",
-              "bearer": [
-                {
-                  "key": "token",
-                  "value": "{{employeeToken}}",
-                  "type": "string"
-                }
-              ]
-            },
-            "body": {
-              "mode": "raw",
-              "raw": "{}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            }
-          },
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "type": "text/javascript",
-                "exec": [
-                  "pm.test('Status is 422', () => pm.response.to.have.status(422));",
-                  "pm.test('Error code is invalid_transition', () => pm.expect(pm.response.json().code).to.eql('invalid_transition'));"
-                ]
-              }
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "name": "05 Notifications",
-      "item": [
-        {
-          "name": "List notifications (manager)",
-          "request": {
-            "method": "GET",
-            "header": [
-              {
-                "key": "Accept",
-                "value": "application/json"
-              }
-            ],
-            "url": {
-              "raw": "{{baseUrl}}/notifications",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "notifications"
-              ]
-            },
-            "auth": {
-              "type": "bearer",
-              "bearer": [
-                {
-                  "key": "token",
-                  "value": "{{managerToken}}",
-                  "type": "string"
-                }
-              ]
-            }
-          },
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "type": "text/javascript",
-                "exec": [
-                  "pm.test('Status is 200', () => pm.response.to.have.status(200));",
-                  "pm.test(\"has unread_count\", () => pm.expect(typeof pm.response.json().meta.unread_count === 'number').to.be.true);"
-                ]
-              }
-            }
-          ]
-        },
-        {
-          "name": "Mark all read (manager)",
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Accept",
-                "value": "application/json"
-              },
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "url": {
-              "raw": "{{baseUrl}}/notifications/read-all",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "notifications",
-                "read-all"
-              ]
-            },
-            "auth": {
-              "type": "bearer",
-              "bearer": [
-                {
-                  "key": "token",
-                  "value": "{{managerToken}}",
-                  "type": "string"
-                }
-              ]
-            },
-            "body": {
-              "mode": "raw",
-              "raw": "{}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            }
-          },
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "type": "text/javascript",
-                "exec": [
-                  "pm.test('Status is 200', () => pm.response.to.have.status(200));"
-                ]
-              }
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "name": "06 Expected errors",
-      "item": [
-        {
-          "name": "401 without token",
-          "request": {
-            "method": "GET",
-            "header": [
-              {
-                "key": "Accept",
-                "value": "application/json"
-              }
-            ],
-            "url": {
-              "raw": "{{baseUrl}}/requests",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "requests"
-              ]
-            }
-          },
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "type": "text/javascript",
-                "exec": [
-                  "pm.test('Status is 401', () => pm.response.to.have.status(401));",
-                  "pm.test('Error code is unauthenticated', () => pm.expect(pm.response.json().code).to.eql('unauthenticated'));"
-                ]
-              }
-            }
-          ]
-        },
-        {
-          "name": "401 wrong password",
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Accept",
-                "value": "application/json"
-              },
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "url": {
-              "raw": "{{baseUrl}}/login",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "login"
-              ]
-            },
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"email\": \"employee1@quantix.test\",\n  \"password\": \"wrong\"\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            }
-          },
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "type": "text/javascript",
-                "exec": [
-                  "pm.test('Status is 401', () => pm.response.to.have.status(401));",
-                  "pm.test('Error code is unauthenticated', () => pm.expect(pm.response.json().code).to.eql('unauthenticated'));"
-                ]
-              }
-            }
-          ]
-        },
-        {
-          "name": "403 employee tries to decide",
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Accept",
-                "value": "application/json"
-              },
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "url": {
-              "raw": "{{baseUrl}}/requests/{{requestId}}/decision",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "requests",
-                "{{requestId}}",
-                "decision"
-              ]
-            },
-            "auth": {
-              "type": "bearer",
-              "bearer": [
-                {
-                  "key": "token",
-                  "value": "{{employeeToken}}",
-                  "type": "string"
-                }
-              ]
-            },
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"decision\": \"approve\"\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            }
-          },
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "type": "text/javascript",
-                "exec": [
-                  "pm.test('Status is 403', () => pm.response.to.have.status(403));",
-                  "pm.test('Error code is forbidden', () => pm.expect(pm.response.json().code).to.eql('forbidden'));"
-                ]
-              }
-            }
-          ]
-        },
-        {
-          "name": "403 manager of another team",
-          "request": {
-            "method": "GET",
-            "header": [
-              {
-                "key": "Accept",
-                "value": "application/json"
-              }
-            ],
-            "url": {
-              "raw": "{{baseUrl}}/requests/{{requestId}}",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "requests",
-                "{{requestId}}"
-              ]
-            },
-            "auth": {
-              "type": "bearer",
-              "bearer": [
-                {
-                  "key": "token",
-                  "value": "{{otherManagerToken}}",
-                  "type": "string"
-                }
-              ]
-            }
-          },
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "type": "text/javascript",
-                "exec": [
-                  "pm.test('Status is 403', () => pm.response.to.have.status(403));",
-                  "pm.test('Error code is forbidden', () => pm.expect(pm.response.json().code).to.eql('forbidden'));"
-                ]
-              }
-            }
-          ]
-        },
-        {
-          "name": "403 other employee views request",
-          "request": {
-            "method": "GET",
-            "header": [
-              {
-                "key": "Accept",
-                "value": "application/json"
-              }
-            ],
-            "url": {
-              "raw": "{{baseUrl}}/requests/{{requestId}}",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "requests",
-                "{{requestId}}"
-              ]
-            },
-            "auth": {
-              "type": "bearer",
-              "bearer": [
-                {
-                  "key": "token",
-                  "value": "{{otherEmployeeToken}}",
-                  "type": "string"
-                }
-              ]
-            }
-          },
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "type": "text/javascript",
-                "exec": [
-                  "pm.test('Status is 403', () => pm.response.to.have.status(403));",
-                  "pm.test('Error code is forbidden', () => pm.expect(pm.response.json().code).to.eql('forbidden'));"
-                ]
-              }
-            }
-          ]
-        },
-        {
-          "name": "404 unknown request",
-          "request": {
-            "method": "GET",
-            "header": [
-              {
-                "key": "Accept",
-                "value": "application/json"
-              }
-            ],
-            "url": {
-              "raw": "{{baseUrl}}/requests/999999",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "requests",
-                "999999"
-              ]
-            },
-            "auth": {
-              "type": "bearer",
-              "bearer": [
-                {
-                  "key": "token",
-                  "value": "{{employeeToken}}",
-                  "type": "string"
-                }
-              ]
-            }
-          },
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "type": "text/javascript",
-                "exec": [
-                  "pm.test('Status is 404', () => pm.response.to.have.status(404));",
-                  "pm.test('Error code is not_found', () => pm.expect(pm.response.json().code).to.eql('not_found'));"
-                ]
-              }
-            }
-          ]
-        },
-        {
-          "name": "422 validation (empty create)",
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Accept",
-                "value": "application/json"
-              },
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "url": {
-              "raw": "{{baseUrl}}/requests",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "requests"
-              ]
-            },
-            "auth": {
-              "type": "bearer",
-              "bearer": [
-                {
-                  "key": "token",
-                  "value": "{{employeeToken}}",
-                  "type": "string"
-                }
-              ]
-            },
-            "body": {
-              "mode": "raw",
-              "raw": "{}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            }
-          },
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "type": "text/javascript",
-                "exec": [
-                  "pm.test('Status is 422', () => pm.response.to.have.status(422));",
-                  "pm.test('Error code is validation_failed', () => pm.expect(pm.response.json().code).to.eql('validation_failed'));",
-                  "pm.test(\"has field errors\", () => pm.expect(pm.response.json().errors.title.length > 0).to.be.true);"
-                ]
-              }
-            }
-          ]
-        },
-        {
-          "name": "422 invalid transition (decide on completed)",
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Accept",
-                "value": "application/json"
-              },
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "url": {
-              "raw": "{{baseUrl}}/requests/{{requestId}}/decision",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "requests",
-                "{{requestId}}",
-                "decision"
-              ]
-            },
-            "auth": {
-              "type": "bearer",
-              "bearer": [
-                {
-                  "key": "token",
-                  "value": "{{managerToken}}",
-                  "type": "string"
-                }
-              ]
-            },
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"decision\": \"approve\"\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            }
-          },
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "type": "text/javascript",
-                "exec": [
-                  "pm.test('Status is 422', () => pm.response.to.have.status(422));",
-                  "pm.test('Error code is invalid_transition', () => pm.expect(pm.response.json().code).to.eql('invalid_transition'));"
-                ]
-              }
-            }
-          ]
-        }
-      ]
-    }
-  ]
+    ]
 }

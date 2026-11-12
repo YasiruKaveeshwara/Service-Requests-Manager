@@ -1,4 +1,4 @@
-# Quantix Service Requests API
+# Service Requests Manager API
 
 This directory contains the Laravel API for Service Requests Manager.
 
@@ -42,16 +42,16 @@ The default `.env.example` uses the following local PostgreSQL connection:
 | -------- | ---------------------------------------------- |
 | Host     | `127.0.0.1`                                    |
 | Port     | `5432`                                         |
-| Database | `quantix`                                      |
+| Database | `service_requests`                             |
 | Username | `postgres`                                     |
 | Password | Your local PostgreSQL `postgres` user password |
 
-Create a database named `quantix` in pgAdmin before migrating if it does not
+Create a database named `service_requests` in pgAdmin before migrating if it does not
 already exist. PostgreSQL must accept password authentication for the
 `postgres` user.
 
 ```sql
-CREATE DATABASE quantix;
+CREATE DATABASE service_requests;
 ```
 
 If you do not know the password, run this in the pgAdmin Query Tool while
@@ -62,10 +62,10 @@ development password:
 ALTER USER postgres WITH PASSWORD 'your_postgres_password';
 ```
 
-Run the migrations:
+Run the migrations and seed the reviewer accounts and sample requests:
 
 ```powershell
-php artisan migrate
+php artisan migrate:fresh --seed
 ```
 
 ## Running locally
@@ -78,7 +78,8 @@ php artisan serve --port=5000
 
 - API base URL: <http://localhost:5000/api>
 - Health check: <http://localhost:5000/up>
-- Documentation URL: <http://localhost:5000/docs> (when API documentation is configured)
+- Documentation URL: <http://localhost:5000/docs>
+- OpenAPI specification: <http://localhost:5000/openapi.yaml>
 
 ## Quality checks
 

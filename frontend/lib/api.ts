@@ -1,5 +1,5 @@
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:5000/api";
-const TOKEN_KEY = "quantix_token";
+const TOKEN_KEY = "service_requests_token";
 export const UNAUTHORIZED_EVENT = "auth:unauthorized";
 
 export class ApiError extends Error {

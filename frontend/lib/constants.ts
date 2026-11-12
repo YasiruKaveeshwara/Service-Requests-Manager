@@ -42,7 +42,7 @@ export const PRIORITY_STYLES: Record<Priority, string> = {
 };
 
 export const DEMO_ACCOUNTS = [
-	{ label: "Employee", email: "employee1@quantix.test", password: "password" },
-	{ label: "Manager", email: "manager@quantix.test", password: "password" },
-	{ label: "Operations", email: "ops1@quantix.test", password: "password" },
+	{ label: "Employee", email: "employee1@service-requests.test", password: "password" },
+	{ label: "Manager", email: "manager@service-requests.test", password: "password" },
+	{ label: "Operations", email: "ops1@service-requests.test", password: "password" },
 ];

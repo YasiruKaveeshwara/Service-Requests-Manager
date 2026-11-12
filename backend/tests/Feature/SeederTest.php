@@ -18,8 +18,8 @@ it('seeds the demo users and manager hierarchy', function () {
         ->and(User::query()->where('role', 'employee')->count())->toBe(3)
         ->and(User::query()->where('role', 'manager')->count())->toBe(2)
         ->and(User::query()->where('role', 'operations')->count())->toBe(2)
-        ->and(User::query()->where('email', 'manager@quantix.test')->firstOrFail()->directReports)->toHaveCount(2)
-        ->and(User::query()->where('email', 'manager2@quantix.test')->firstOrFail()->directReports)->toHaveCount(1);
+        ->and(User::query()->where('email', 'manager@service-requests.test')->firstOrFail()->directReports)->toHaveCount(2)
+        ->and(User::query()->where('email', 'manager2@service-requests.test')->firstOrFail()->directReports)->toHaveCount(1);
 });
 
 it('seeds eleven requests across every status with audit history', function () {
@@ -43,6 +43,6 @@ it('matches the requested status distribution and supports seeded login', functi
         ->and(ServiceRequest::query()->where('status', RequestStatus::Rejected->value)->count())->toBe(1)
         ->and(ServiceRequest::query()->where('status', RequestStatus::Cancelled->value)->count())->toBe(1);
 
-    $this->postJson('/api/login', ['email' => 'employee1@quantix.test', 'password' => 'password'])
+    $this->postJson('/api/login', ['email' => 'employee1@service-requests.test', 'password' => 'password'])
         ->assertOk();
 });

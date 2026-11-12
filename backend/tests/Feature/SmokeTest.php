@@ -9,5 +9,5 @@ it('boots the app and answers the framework health check', function () {
 });
 
 it('runs against the dedicated test database', function () {
-    expect(DB::connection()->getDatabaseName())->toBe('quantix_test');
+    expect(DB::connection()->getDatabaseName())->toBe('service_requests_test');
 });

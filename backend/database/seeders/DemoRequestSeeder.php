@@ -18,13 +18,13 @@ final class DemoRequestSeeder extends Seeder
 {
     public function run(RequestWorkflowService $workflow, CommentService $comments): void
     {
-        $maya = User::query()->where('email', 'manager@quantix.test')->firstOrFail();
-        $marcus = User::query()->where('email', 'manager2@quantix.test')->firstOrFail();
-        $ethan = User::query()->where('email', 'employee1@quantix.test')->firstOrFail();
-        $emma = User::query()->where('email', 'employee2@quantix.test')->firstOrFail();
-        $ella = User::query()->where('email', 'employee3@quantix.test')->firstOrFail();
-        $olivia = User::query()->where('email', 'ops1@quantix.test')->firstOrFail();
-        $oscar = User::query()->where('email', 'ops2@quantix.test')->firstOrFail();
+        $maya = User::query()->where('email', 'manager@service-requests.test')->firstOrFail();
+        $marcus = User::query()->where('email', 'manager2@service-requests.test')->firstOrFail();
+        $ethan = User::query()->where('email', 'employee1@service-requests.test')->firstOrFail();
+        $emma = User::query()->where('email', 'employee2@service-requests.test')->firstOrFail();
+        $ella = User::query()->where('email', 'employee3@service-requests.test')->firstOrFail();
+        $olivia = User::query()->where('email', 'ops1@service-requests.test')->firstOrFail();
+        $oscar = User::query()->where('email', 'ops2@service-requests.test')->firstOrFail();
 
         $make = function (User $requester, string $title, RequestCategory $category, RequestPriority $priority, string $description) use ($workflow): ServiceRequest {
             return $workflow->create($requester, [

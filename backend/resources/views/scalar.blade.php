@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Quantix Service Requests API</title>
+    <title> Service Requests Manager API</title>
 </head>
 <body>
     <script id="api-reference" data-url="{{ url('/openapi.yaml') }}"></script>

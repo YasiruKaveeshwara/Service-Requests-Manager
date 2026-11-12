@@ -13,8 +13,8 @@ describe("LoginForm", () => {
 
 	it("fills credentials from a demo account", () => {
 		render(<LoginForm onSubmit={vi.fn()} />);
-		fireEvent.click(screen.getByRole("button", { name: "Employee: employee1@quantix.test" }));
-		expect(screen.getByLabelText("Email")).toHaveValue("employee1@quantix.test");
+		fireEvent.click(screen.getByRole("button", { name: "Employee: employee1@service-requests.test" }));
+		expect(screen.getByLabelText("Email")).toHaveValue("employee1@service-requests.test");
 		expect(screen.getByLabelText("Password")).toHaveValue("password");
 	});
 

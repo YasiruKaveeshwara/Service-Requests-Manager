@@ -14,8 +14,8 @@ abstract class TestCase extends BaseTestCase
     {
         $database = DB::connection()->getDatabaseName();
 
-        if ($database !== 'quantix_test') {
-            throw new RuntimeException("Refusing to run tests against [{$database}]. Expected [quantix_test].");
+        if ($database !== 'service_requests_test') {
+            throw new RuntimeException("Refusing to run tests against [{$database}]. Expected [service_requests_test].");
         }
     }
 }
