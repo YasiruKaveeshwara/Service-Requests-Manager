@@ -10,6 +10,6 @@ abstract class ApiResource extends JsonResource
 {
     protected function relation(string $name, string $resourceClass): mixed
     {
-        return $this->whenLoaded($name, fn() => $this->{$name} === null ? null : new $resourceClass($this->{$name}));
+        return $this->whenLoaded($name, fn () => $this->{$name} === null ? null : new $resourceClass($this->{$name}));
     }
 }

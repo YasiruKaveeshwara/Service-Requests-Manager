@@ -44,3 +44,14 @@ it('validates list filters', function () {
 
     $this->getJson('/api/requests?status=unknown')->assertStatus(422);
 });
+
+it('provides multiple pages for seeded operations requests', function () {
+    $this->seed();
+    Sanctum::actingAs(User::query()->where('email', 'ops1@service-requests.test')->firstOrFail());
+
+    $this->getJson('/api/requests?per_page=15')
+        ->assertOk()
+        ->assertJsonPath('meta.total', 16)
+        ->assertJsonPath('meta.current_page', 1)
+        ->assertJsonPath('meta.last_page', 2);
+});

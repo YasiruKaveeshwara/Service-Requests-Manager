@@ -22,11 +22,11 @@ it('seeds the demo users and manager hierarchy', function () {
         ->and(User::query()->where('email', 'manager2@service-requests.test')->firstOrFail()->directReports)->toHaveCount(1);
 });
 
-it('seeds eleven requests across every status with audit history', function () {
+it('seeds requests across every status with audit history', function () {
     $this->seed();
 
-    expect(ServiceRequest::query()->count())->toBe(11)
-        ->and(ServiceRequest::query()->whereHas('activityLogs')->count())->toBe(11)
+    expect(ServiceRequest::query()->count())->toBe(23)
+        ->and(ServiceRequest::query()->whereHas('activityLogs')->count())->toBe(23)
         ->and(ServiceRequest::query()->where('status', RequestStatus::Completed->value)->firstOrFail()->activityLogs)->toHaveCount(6)
         ->and(ServiceRequest::query()->where('title', 'Laptop battery replacement')->firstOrFail()->comments)->toHaveCount(2);
 });
@@ -37,7 +37,7 @@ it('matches the requested status distribution and supports seeded login', functi
     expect(ServiceRequest::query()->where('status', RequestStatus::Draft->value)->count())->toBe(1)
         ->and(ServiceRequest::query()->where('status', RequestStatus::Submitted->value)->count())->toBe(3)
         ->and(ServiceRequest::query()->where('status', RequestStatus::Returned->value)->count())->toBe(1)
-        ->and(ServiceRequest::query()->where('status', RequestStatus::Approved->value)->count())->toBe(2)
+        ->and(ServiceRequest::query()->where('status', RequestStatus::Approved->value)->count())->toBe(14)
         ->and(ServiceRequest::query()->where('status', RequestStatus::InProgress->value)->count())->toBe(1)
         ->and(ServiceRequest::query()->where('status', RequestStatus::Completed->value)->count())->toBe(1)
         ->and(ServiceRequest::query()->where('status', RequestStatus::Rejected->value)->count())->toBe(1)

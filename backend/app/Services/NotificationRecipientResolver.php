@@ -32,7 +32,7 @@ final class NotificationRecipientResolver
 
         return $recipients
             ->filter()
-            ->reject(fn(User $user): bool => $user->id === $actor->id)
+            ->reject(fn (User $user): bool => $user->id === $actor->id)
             ->unique('id')
             ->values();
     }

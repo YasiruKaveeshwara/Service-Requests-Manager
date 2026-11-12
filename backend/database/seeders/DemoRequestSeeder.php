@@ -69,5 +69,15 @@ final class DemoRequestSeeder extends Seeder
         $workflow->cancel($request, $emma, 'No longer needed.');
 
         $workflow->create($ella, ['title' => 'Parking access card', 'description' => 'Parking access is needed.', 'category' => 'access', 'priority' => 'medium'], true);
+
+        for ($number = 1; $number <= 12; $number++) {
+            $request = $workflow->create($ethan, [
+                'title' => "Shared equipment request {$number}",
+                'description' => "Additional seeded request for pagination coverage ({$number}).",
+                'category' => RequestCategory::Equipment->value,
+                'priority' => RequestPriority::Medium->value,
+            ], true);
+            $workflow->decide($request, $maya, ManagerDecision::Approve);
+        }
     }
 }

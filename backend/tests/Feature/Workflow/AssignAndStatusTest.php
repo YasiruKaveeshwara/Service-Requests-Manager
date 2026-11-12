@@ -38,7 +38,7 @@ it('rejects invalid assignments', function (RequestStatus $status) {
     $request = ServiceRequest::factory()->inStatus($status)->create();
     $assignee = User::factory()->operations()->create();
 
-    expect(fn() => app(RequestWorkflowService::class)->assign($request, User::factory()->manager()->create(), $assignee))
+    expect(fn () => app(RequestWorkflowService::class)->assign($request, User::factory()->manager()->create(), $assignee))
         ->toThrow(WorkflowException::class);
 })->with([
     RequestStatus::Draft,
@@ -56,8 +56,8 @@ it('rejects non-operations and duplicate assignees', function () {
     $request = ServiceRequest::factory()->inStatus(RequestStatus::Approved)->assignedTo($ops)->create();
     $service = app(RequestWorkflowService::class);
 
-    expect(fn() => $service->assign($request, $actor, $employee))->toThrow(WorkflowException::class)
-        ->and(fn() => $service->assign($request, $actor, $ops))->toThrow(WorkflowException::class);
+    expect(fn () => $service->assign($request, $actor, $employee))->toThrow(WorkflowException::class)
+        ->and(fn () => $service->assign($request, $actor, $ops))->toThrow(WorkflowException::class);
 });
 
 it('starts and completes work for the assignee', function () {
@@ -79,11 +79,11 @@ it('rejects invalid or unauthorized status changes', function () {
     $request = ServiceRequest::factory()->inStatus(RequestStatus::Approved)->assignedTo($ops)->create();
     $service = app(RequestWorkflowService::class);
 
-    expect(fn() => $service->changeStatus($request, $other, RequestStatus::InProgress))
+    expect(fn () => $service->changeStatus($request, $other, RequestStatus::InProgress))
         ->toThrow(AuthorizationException::class)
-        ->and(fn() => $service->changeStatus($request, $ops, RequestStatus::Completed))
+        ->and(fn () => $service->changeStatus($request, $ops, RequestStatus::Completed))
         ->toThrow(WorkflowException::class)
-        ->and(fn() => $service->changeStatus($request, $ops, RequestStatus::Approved))
+        ->and(fn () => $service->changeStatus($request, $ops, RequestStatus::Approved))
         ->toThrow(WorkflowException::class);
 });
 
@@ -91,7 +91,7 @@ it('requires an assignee before changing status', function () {
     $ops = User::factory()->operations()->create();
     $request = ServiceRequest::factory()->inStatus(RequestStatus::Approved)->create();
 
-    expect(fn() => app(RequestWorkflowService::class)->changeStatus($request, $ops, RequestStatus::InProgress))
+    expect(fn () => app(RequestWorkflowService::class)->changeStatus($request, $ops, RequestStatus::InProgress))
         ->toThrow(WorkflowException::class);
 });
 

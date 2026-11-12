@@ -72,5 +72,5 @@ it('creates the required persistence schema', function () {
 
     $indexes = collect(Schema::getIndexes('service_requests'));
 
-    expect($indexes->contains(fn(array $index): bool => $index['columns'] === ['status']))->toBeTrue();
+    expect($indexes->contains(fn (array $index): bool => $index['columns'] === ['status']))->toBeTrue();
 });

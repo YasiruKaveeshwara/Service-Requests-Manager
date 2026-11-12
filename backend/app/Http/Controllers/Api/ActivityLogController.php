@@ -15,7 +15,7 @@ final class ActivityLogController
     {
         $activity = $serviceRequest->activityLogs()
             ->with('actor')
-            ->when($request->validated('event'), fn($query, $event) => $query->where('event', $event))
+            ->when($request->validated('event'), fn ($query, $event) => $query->where('event', $event))
             ->paginate((int) ($request->validated('per_page') ?? 25));
 
         return ActivityLogResource::collection($activity);

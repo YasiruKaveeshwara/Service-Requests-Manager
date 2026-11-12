@@ -70,6 +70,10 @@ Run the queue worker in a second terminal to process notification jobs:
 php artisan queue:work
 ```
 
+Keep this worker running while developing. Status-change and workflow notifications
+are queued in PostgreSQL and will not appear in the notification bell until the
+worker processes them.
+
 ### Frontend
 
 ```powershell
@@ -93,8 +97,8 @@ URLs:
 
 All demo accounts use the password `password`.
 
-| Role       | Email                    |
-| ---------- | ------------------------ |
+| Role       | Email                             |
+| ---------- | --------------------------------- |
 | Employee   | `employee1@service-requests.test` |
 | Employee   | `employee2@service-requests.test` |
 | Manager    | `manager@service-requests.test`   |

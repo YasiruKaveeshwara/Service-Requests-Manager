@@ -70,6 +70,12 @@ export function AppShell({ children }: { children: React.ReactNode }) {
 				</div>
 			</header>
 			<main className='mx-auto max-w-6xl px-4 py-6'>{children}</main>
+			<footer className='border-t border-slate-200 bg-white'>
+				<div className='mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-4 text-xs text-slate-500'>
+					<span>Service Requests Manager</span>
+					<span>Created by Yasiru Kaveeshwara</span>
+				</div>
+			</footer>
 		</div>
 	);
 }

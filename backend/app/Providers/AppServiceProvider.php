@@ -28,7 +28,7 @@ class AppServiceProvider extends ServiceProvider
     {
         Model::preventLazyLoading(! $this->app->isProduction());
 
-        RateLimiter::for('api', fn(Request $request) => Limit::perMinute(120)->by($request->user()?->id ?: $request->ip()));
-        RateLimiter::for('login', fn(Request $request) => Limit::perMinute(5)->by(Str::lower((string) $request->input('email')) . '|' . $request->ip()));
+        RateLimiter::for('api', fn (Request $request) => Limit::perMinute(120)->by($request->user()?->id ?: $request->ip()));
+        RateLimiter::for('login', fn (Request $request) => Limit::perMinute(5)->by(Str::lower((string) $request->input('email')).'|'.$request->ip()));
     }
 }

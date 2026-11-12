@@ -21,7 +21,7 @@ final class CommentService
             $locked = ServiceRequest::query()->lockForUpdate()->findOrFail($serviceRequest->getKey());
 
             if ($locked->status->isFinal()) {
-                throw WorkflowException::because('Comments are closed because this request is ' . strtolower($locked->status->label()) . '.');
+                throw WorkflowException::because('Comments are closed because this request is '.strtolower($locked->status->label()).'.');
             }
 
             $comment = Comment::query()->forceCreate([

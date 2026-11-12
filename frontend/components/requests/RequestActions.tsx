@@ -1,6 +1,9 @@
 "use client";
 
+import { useState } from "react";
+
 import { Button } from "@/components/ui/Button";
+import { Select } from "@/components/ui/Select";
 import type { Abilities } from "@/lib/types";
 
 export type ActionKey =
@@ -34,22 +37,55 @@ export function RequestActions({
 			{ key: "reject", label: "Reject", variant: "danger" },
 		);
 	if (abilities.assign) actions.push({ key: "assign", label: "Assign owner", variant: "secondary" });
-	if (abilities.start) actions.push({ key: "start", label: "Start work" });
-	if (abilities.complete) actions.push({ key: "complete", label: "Mark completed" });
-	if (actions.length === 0) return null;
+	const statusOptions: { key: "start" | "complete"; label: string }[] = [];
+	if (abilities.start) statusOptions.push({ key: "start", label: "In progress" });
+	if (abilities.complete) statusOptions.push({ key: "complete", label: "Completed" });
+	const [statusAction, setStatusAction] = useState<"start" | "complete" | "">("");
+	if (actions.length === 0 && statusOptions.length === 0) return null;
 
 	return (
-		<div className='flex flex-wrap gap-2'>
-			{actions.map((action) => (
-				<Button
-					key={action.key}
-					data-action={action.key}
-					variant={action.variant}
-					disabled={busy}
-					onClick={() => onAction(action.key)}>
-					{action.label}
-				</Button>
-			))}
+		<div className='space-y-3'>
+			{actions.length > 0 && (
+				<div className='flex flex-wrap gap-2'>
+					{actions.map((action) => (
+						<Button
+							key={action.key}
+							data-action={action.key}
+							variant={action.variant}
+							disabled={busy}
+							onClick={() => onAction(action.key)}>
+							{action.label}
+						</Button>
+					))}
+				</div>
+			)}
+			{statusOptions.length > 0 && (
+				<div className='flex flex-wrap items-end gap-2'>
+					<label className='text-sm font-medium text-slate-700'>
+						<span className='mb-1 block'>Change status</span>
+						<Select
+							aria-label='Change status'
+							value={statusAction}
+							disabled={busy}
+							onChange={(event) => setStatusAction(event.target.value as "start" | "complete" | "")}>
+							<option value=''>Select a status</option>
+							{statusOptions.map((option) => (
+								<option key={option.key} value={option.key}>
+									{option.label}
+								</option>
+							))}
+						</Select>
+					</label>
+					<Button
+						data-action='change-status'
+						disabled={busy || statusAction === ""}
+						onClick={() => {
+							if (statusAction) onAction(statusAction);
+						}}>
+						Apply status
+					</Button>
+				</div>
+			)}
 		</div>
 	);
 }

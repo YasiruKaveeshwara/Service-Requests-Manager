@@ -78,7 +78,7 @@ class ServiceRequest extends Model
         match ($user->role) {
             UserRole::Employee => $query->where('requester_id', $user->id),
             UserRole::Manager => $query->whereNotNull('submitted_at')
-                ->whereIn('requester_id', fn($sub) => $sub->select('id')->from('users')->where('manager_id', $user->id)),
+                ->whereIn('requester_id', fn ($sub) => $sub->select('id')->from('users')->where('manager_id', $user->id)),
             UserRole::Operations => $query->whereIn('status', RequestStatus::operationsVisibleValues()),
         };
     }
@@ -87,11 +87,11 @@ class ServiceRequest extends Model
     public function scopeFilter(Builder $query, array $filters): void
     {
         $query
-            ->when($filters['status'] ?? null, fn(Builder $q, string $status) => $q->where('status', $status))
-            ->when($filters['assignee_id'] ?? null, fn(Builder $q, $id) => $q->where('assignee_id', (int) $id))
+            ->when($filters['status'] ?? null, fn (Builder $q, string $status) => $q->where('status', $status))
+            ->when($filters['assignee_id'] ?? null, fn (Builder $q, $id) => $q->where('assignee_id', (int) $id))
             ->when($filters['search'] ?? null, function (Builder $q, string $term): void {
-                $like = '%' . addcslashes($term, '%_\\') . '%';
-                $q->where(fn(Builder $w) => $w->where('title', 'ilike', $like)->orWhere('description', 'ilike', $like));
+                $like = '%'.addcslashes($term, '%_\\').'%';
+                $q->where(fn (Builder $w) => $w->where('title', 'ilike', $like)->orWhere('description', 'ilike', $like));
             });
     }
 

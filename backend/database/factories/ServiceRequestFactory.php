@@ -33,7 +33,7 @@ class ServiceRequestFactory extends Factory
 
     public function inStatus(RequestStatus $status): static
     {
-        return $this->state(fn(array $attributes) => [
+        return $this->state(fn (array $attributes) => [
             'status' => $status,
             'submitted_at' => $status === RequestStatus::Draft ? null : now()->subDays(2),
             'completed_at' => $status === RequestStatus::Completed ? now() : null,
@@ -42,6 +42,6 @@ class ServiceRequestFactory extends Factory
 
     public function assignedTo(User $user): static
     {
-        return $this->state(fn(array $attributes) => ['assignee_id' => $user->id]);
+        return $this->state(fn (array $attributes) => ['assignee_id' => $user->id]);
     }
 }

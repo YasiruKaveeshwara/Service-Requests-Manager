@@ -18,7 +18,7 @@ final class ChangeStatusRequest extends ServiceRequestActionRequest
     {
         return [
             'status' => ['required', Rule::in(array_map(
-                static fn(RequestStatus $status): string => $status->value,
+                static fn (RequestStatus $status): string => $status->value,
                 [RequestStatus::InProgress, RequestStatus::Completed],
             ))],
             'comment' => ['nullable', 'string', 'max:1000'],

@@ -38,8 +38,9 @@ describe("RequestActions", () => {
 			<RequestActions abilities={makeAbilities({ assign: true, start: true, complete: true })} onAction={vi.fn()} />,
 		);
 		expect(screen.getByText("Assign owner")).toBeInTheDocument();
-		expect(screen.getByText("Start work")).toBeInTheDocument();
-		expect(screen.getByText("Mark completed")).toBeInTheDocument();
+		expect(screen.getByRole("combobox", { name: "Change status" })).toBeInTheDocument();
+		expect(screen.getByRole("option", { name: "In progress" })).toBeInTheDocument();
+		expect(screen.getByRole("option", { name: "Completed" })).toBeInTheDocument();
 	});
 
 	it("renders nothing when no action is allowed", () => {

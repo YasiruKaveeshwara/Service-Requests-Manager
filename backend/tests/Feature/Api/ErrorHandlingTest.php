@@ -9,7 +9,7 @@ use Illuminate\Validation\ValidationException;
 
 beforeEach(function (): void {
     Route::middleware('api')->prefix('api/_test')->group(function (): void {
-        Route::get('auth', fn() => 'ok')->middleware('auth:sanctum');
+        Route::get('auth', fn () => 'ok')->middleware('auth:sanctum');
         Route::get('validation', function (): never {
             throw ValidationException::withMessages(['title' => ['Required']]);
         });

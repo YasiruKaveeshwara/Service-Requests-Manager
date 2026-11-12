@@ -37,8 +37,8 @@ class RequestStatusNotification extends Notification
         return (new MailMessage)
             ->subject(sprintf('[Request #%d] %s', $this->serviceRequest->id, $this->type->label()))
             ->line($this->message())
-            ->line('Action by: ' . $this->actor->name)
-            ->action('View request', rtrim((string) config('app.frontend_url'), '/') . '/requests/' . $this->serviceRequest->id);
+            ->line('Action by: '.$this->actor->name)
+            ->action('View request', rtrim((string) config('app.frontend_url'), '/').'/requests/'.$this->serviceRequest->id);
     }
 
     /** @return array<string, mixed> */

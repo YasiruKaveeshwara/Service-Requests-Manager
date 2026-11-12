@@ -76,6 +76,15 @@ Start the API on port 5000:
 php artisan serve --port=5000
 ```
 
+Start the queue worker in a second terminal so queued notifications are processed:
+
+```powershell
+php artisan queue:work
+```
+
+Keep the worker running during local development. Notifications are stored only
+after the queued job is processed.
+
 - API base URL: <http://localhost:5000/api>
 - Health check: <http://localhost:5000/up>
 - Documentation URL: <http://localhost:5000/docs>

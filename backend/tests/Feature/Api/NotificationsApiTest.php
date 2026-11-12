@@ -30,7 +30,7 @@ it('lists and reads notifications', function () {
         ->assertJsonPath('data.0.read_at', null);
     $this->postJson("/api/notifications/{$notification->id}/read")
         ->assertOk()
-        ->assertJsonPath('data.read_at', fn($value) => $value !== null);
+        ->assertJsonPath('data.read_at', fn ($value) => $value !== null);
     $this->getJson('/api/notifications')->assertJsonPath('meta.unread_count', 0);
 });
 

@@ -63,7 +63,7 @@ it('assigns, starts and completes an approved request', function () {
     $this->postJson("/api/requests/{$request->id}/status", ['status' => 'completed', 'comment' => 'Delivered'])
         ->assertOk()
         ->assertJsonPath('data.status', 'completed')
-        ->assertJsonPath('data.completed_at', fn($value) => $value !== null);
+        ->assertJsonPath('data.completed_at', fn ($value) => $value !== null);
 });
 
 it('rejects another employee submitting a request', function () {
@@ -118,5 +118,5 @@ it('dispatches notifications for successful workflow actions', function () {
     Sanctum::actingAs($employee);
     $this->postJson("/api/requests/{$request->id}/submit")->assertOk();
 
-    Queue::assertPushed(SendRequestNotificationsJob::class, fn(SendRequestNotificationsJob $job): bool => $job->type === RequestNotificationType::Submitted);
+    Queue::assertPushed(SendRequestNotificationsJob::class, fn (SendRequestNotificationsJob $job): bool => $job->type === RequestNotificationType::Submitted);
 });

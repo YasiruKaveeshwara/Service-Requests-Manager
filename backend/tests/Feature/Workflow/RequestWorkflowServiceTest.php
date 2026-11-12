@@ -39,7 +39,7 @@ it('creates and submits a request', function () {
 it('does not create when submitting without a manager', function () {
     $actor = User::factory()->create();
 
-    expect(fn() => app(RequestWorkflowService::class)->create($actor, requestData(), true))
+    expect(fn () => app(RequestWorkflowService::class)->create($actor, requestData(), true))
         ->toThrow(WorkflowException::class);
     expect(ServiceRequest::query()->count())->toBe(0);
 });
@@ -66,7 +66,7 @@ it('rejects edits outside editable statuses', function (RequestStatus $status) {
     $actor = User::factory()->create();
     $request = ServiceRequest::factory()->inStatus($status)->create(['requester_id' => $actor->id]);
 
-    expect(fn() => app(RequestWorkflowService::class)->update($request, $actor, ['title' => 'Nope']))
+    expect(fn () => app(RequestWorkflowService::class)->update($request, $actor, ['title' => 'Nope']))
         ->toThrow(WorkflowException::class);
 })->with([
     RequestStatus::Submitted,
@@ -85,7 +85,7 @@ it('submits a draft and queues notification', function () {
 
     expect($request->fresh()->status)->toBe(RequestStatus::Submitted)
         ->and($request->fresh()->activityLogs->last()->comment)->toBe('Please review');
-    Queue::assertPushed(SendRequestNotificationsJob::class, fn(SendRequestNotificationsJob $job): bool => $job->type === RequestNotificationType::Submitted && $job->actorId === $actor->id);
+    Queue::assertPushed(SendRequestNotificationsJob::class, fn (SendRequestNotificationsJob $job): bool => $job->type === RequestNotificationType::Submitted && $job->actorId === $actor->id);
 });
 
 it('submits a returned request', function () {
@@ -100,7 +100,7 @@ it('rejects invalid submissions', function (RequestStatus $status) {
     $actor = User::factory()->create();
     $request = ServiceRequest::factory()->inStatus($status)->create(['requester_id' => $actor->id]);
 
-    expect(fn() => app(RequestWorkflowService::class)->submit($request, $actor))
+    expect(fn () => app(RequestWorkflowService::class)->submit($request, $actor))
         ->toThrow(WorkflowException::class);
 })->with([RequestStatus::Submitted, RequestStatus::Approved, RequestStatus::Completed, RequestStatus::Rejected, RequestStatus::Cancelled]);
 
@@ -108,7 +108,7 @@ it('requires a manager to submit', function () {
     $actor = User::factory()->create();
     $request = ServiceRequest::factory()->create(['requester_id' => $actor->id]);
 
-    expect(fn() => app(RequestWorkflowService::class)->submit($request, $actor))
+    expect(fn () => app(RequestWorkflowService::class)->submit($request, $actor))
         ->toThrow(WorkflowException::class);
 });
 
@@ -125,7 +125,7 @@ it('rejects cancellation of active or final requests', function (RequestStatus $
     $actor = User::factory()->create();
     $request = ServiceRequest::factory()->inStatus($status)->create(['requester_id' => $actor->id]);
 
-    expect(fn() => app(RequestWorkflowService::class)->cancel($request, $actor))
+    expect(fn () => app(RequestWorkflowService::class)->cancel($request, $actor))
         ->toThrow(WorkflowException::class);
 })->with([RequestStatus::Approved, RequestStatus::InProgress, RequestStatus::Completed, RequestStatus::Rejected]);
 
@@ -135,7 +135,7 @@ it('approves a submitted request', function () {
     app(RequestWorkflowService::class)->decide($request, $manager, ManagerDecision::Approve);
 
     expect($request->fresh()->status)->toBe(RequestStatus::Approved);
-    Queue::assertPushed(SendRequestNotificationsJob::class, fn(SendRequestNotificationsJob $job): bool => $job->type === RequestNotificationType::Approved);
+    Queue::assertPushed(SendRequestNotificationsJob::class, fn (SendRequestNotificationsJob $job): bool => $job->type === RequestNotificationType::Approved);
 });
 
 it('rejects and returns with comments', function (ManagerDecision $decision, RequestStatus $status) {
@@ -153,7 +153,7 @@ it('rejects and returns with comments', function (ManagerDecision $decision, Req
 it('requires comments for reject and return only', function (ManagerDecision $decision) {
     [$request, $manager] = submittedRequest();
 
-    expect(fn() => app(RequestWorkflowService::class)->decide($request, $manager, $decision))
+    expect(fn () => app(RequestWorkflowService::class)->decide($request, $manager, $decision))
         ->toThrow(WorkflowException::class);
 })->with([ManagerDecision::Reject, ManagerDecision::SendBack]);
 
@@ -168,7 +168,7 @@ it('rejects decisions on non-submitted requests', function (RequestStatus $statu
     $manager = User::factory()->manager()->create();
     $request = ServiceRequest::factory()->inStatus($status)->create();
 
-    expect(fn() => app(RequestWorkflowService::class)->decide($request, $manager, ManagerDecision::Approve))
+    expect(fn () => app(RequestWorkflowService::class)->decide($request, $manager, ManagerDecision::Approve))
         ->toThrow(WorkflowException::class);
 })->with([RequestStatus::Draft, RequestStatus::Approved, RequestStatus::Completed, RequestStatus::Rejected]);
 
@@ -176,7 +176,7 @@ it('rolls back failed rules and dispatches no job', function () {
     $actor = User::factory()->create();
     $request = ServiceRequest::factory()->inStatus(RequestStatus::Submitted)->create(['requester_id' => $actor->id]);
 
-    expect(fn() => app(RequestWorkflowService::class)->decide($request, $actor, ManagerDecision::Reject))
+    expect(fn () => app(RequestWorkflowService::class)->decide($request, $actor, ManagerDecision::Reject))
         ->toThrow(WorkflowException::class);
     Queue::assertNothingPushed();
     expect($request->fresh()->status)->toBe(RequestStatus::Submitted);

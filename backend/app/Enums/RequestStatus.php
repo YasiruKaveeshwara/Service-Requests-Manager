@@ -60,6 +60,6 @@ enum RequestStatus: string
     /** @return list<string> */
     public static function operationsVisibleValues(): array
     {
-        return array_map(static fn(self $status): string => $status->value, self::operationsVisible());
+        return array_map(static fn (self $status): string => $status->value, self::operationsVisible());
     }
 }
