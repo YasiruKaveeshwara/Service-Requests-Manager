@@ -3,6 +3,7 @@
 import { useAuth } from "@/lib/auth";
 import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
+import { NotificationBell } from "@/components/layout/NotificationBell";
 
 export function AppShell({ children }: { children: React.ReactNode }) {
 	const { user, logout } = useAuth();
@@ -15,9 +16,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
 					<div className='flex items-center gap-3'>
 						<span className='hidden text-sm text-slate-600 sm:inline'>{user?.name}</span>
 						{user && <Badge className='bg-slate-100 text-slate-700'>{user.role_label}</Badge>}
-						<span className='text-sm text-slate-400' aria-label='Notifications'>
-							Notifications
-						</span>
+						<NotificationBell />
 						<Button variant='ghost' size='sm' onClick={() => void logout()}>
 							Logout
 						</Button>
