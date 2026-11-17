@@ -7,6 +7,12 @@ namespace App\Http\Resources;
 use App\Models\ServiceRequest;
 use App\Services\RequestAbilities;
 
+/**
+ * Serializes a request and exposes actions available to the current user.
+ *
+ * Relations are included only when the controller explicitly loads them,
+ * preventing accidental N+1 queries on list endpoints.
+ */
 final class ServiceRequestResource extends ApiResource
 {
     /** @return array<string, mixed> */

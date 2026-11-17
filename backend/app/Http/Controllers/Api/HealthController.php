@@ -6,6 +6,9 @@ namespace App\Http\Controllers\Api;
 
 use Illuminate\Http\JsonResponse;
 
+/**
+ * Lightweight liveness endpoint for local development and monitoring.
+ */
 final class HealthController
 {
     public function __invoke(): JsonResponse

@@ -14,6 +14,11 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 
 /**
+ * Authenticated application user.
+ *
+ * Manager relationships define the reporting hierarchy used by request
+ * visibility and notification recipient resolution.
+ *
  * @property UserRole $role
  * @property-read User|null $manager
  */

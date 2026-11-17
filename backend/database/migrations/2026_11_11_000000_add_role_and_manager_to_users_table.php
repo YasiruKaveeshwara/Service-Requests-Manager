@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
+    /** Add role and reporting-line fields used by authorization rules. */
     public function up(): void
     {
         Schema::table('users', function (Blueprint $table): void {
@@ -16,6 +17,7 @@ return new class extends Migration
         });
     }
 
+    /** Restore the original users schema during rollback. */
     public function down(): void
     {
         Schema::table('users', function (Blueprint $table): void {

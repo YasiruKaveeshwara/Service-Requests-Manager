@@ -7,6 +7,9 @@ namespace App\Http\Requests;
 use App\Http\Requests\Concerns\HasServiceRequestFields;
 use App\Models\ServiceRequest;
 
+/**
+ * Validates creation data and the optional immediate-submit flag.
+ */
 final class StoreServiceRequestRequest extends ServiceRequestActionRequest
 {
     use HasServiceRequestFields;

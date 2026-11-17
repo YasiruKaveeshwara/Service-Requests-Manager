@@ -7,6 +7,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Response;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
+/**
+ * Serves the API documentation entry point.
+ */
 final class DocsController
 {
     public function ui(): Response

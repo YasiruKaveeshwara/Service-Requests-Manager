@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
+    /** Create the primary request aggregate and workflow timestamps. */
     public function up(): void
     {
         Schema::create('service_requests', function (Blueprint $table): void {
@@ -30,6 +31,7 @@ return new class extends Migration
         });
     }
 
+    /** Remove the request table during rollback. */
     public function down(): void
     {
         Schema::dropIfExists('service_requests');

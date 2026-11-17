@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace App\Enums;
 
+/**
+ * Immutable audit events recorded against a service request.
+ */
 enum ActivityEvent: string
 {
     case Created = 'created';

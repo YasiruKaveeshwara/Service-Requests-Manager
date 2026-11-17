@@ -12,9 +12,13 @@ use App\Http\Controllers\Api\ServiceRequestWorkflowController;
 use App\Http\Controllers\Api\UserController;
 use Illuminate\Support\Facades\Route;
 
+// Health and authentication endpoints are public so clients can discover
+// availability and obtain a Sanctum token.
 Route::get('health', HealthController::class);
 Route::post('login', [AuthController::class, 'login'])->middleware('throttle:login');
 
+// All resource and workflow endpoints require the bearer token issued by
+// login. Policies and Form Requests enforce the action-level permissions.
 Route::middleware('auth:sanctum')->group(function (): void {
     Route::post('logout', [AuthController::class, 'logout']);
     Route::get('me', [AuthController::class, 'me']);

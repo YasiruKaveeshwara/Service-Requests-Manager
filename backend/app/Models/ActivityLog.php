@@ -12,6 +12,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Carbon;
 
 /**
+ * Append-only audit record describing a request mutation or comment.
+ *
  * @property ActivityEvent $event
  * @property RequestStatus|null $from_status
  * @property RequestStatus|null $to_status

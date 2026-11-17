@@ -16,6 +16,11 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Carbon;
 
 /**
+ * Persistent service-request aggregate and its query scopes.
+ *
+ * Workflow mutations live in RequestWorkflowService; this model owns
+ * relationships, casts, safe filtering, and role-based list visibility.
+ *
  * @property RequestStatus $status
  * @property RequestCategory $category
  * @property RequestPriority $priority
@@ -37,6 +42,8 @@ class ServiceRequest extends Model
     protected static function booted(): void
     {
         static::deleting(function (self $serviceRequest): void {
+            // These records are part of the request's audit history and must not
+            // remain orphaned when a request is deleted.
             $serviceRequest->comments()->delete();
             $serviceRequest->activityLogs()->delete();
         });
@@ -75,6 +82,8 @@ class ServiceRequest extends Model
 
     public function scopeVisibleTo(Builder $query, User $user): void
     {
+        // Keep list visibility in SQL so unauthorized records are never loaded
+        // and filtered later in application memory.
         match ($user->role) {
             UserRole::Employee => $query->where('requester_id', $user->id),
             UserRole::Manager => $query->whereNotNull('submitted_at')
@@ -86,6 +95,8 @@ class ServiceRequest extends Model
     /** @param array<string, mixed> $filters */
     public function scopeFilter(Builder $query, array $filters): void
     {
+        // Escape wildcard characters so a search term is treated as text rather
+        // than allowing callers to inject an unrestricted LIKE pattern.
         $query
             ->when($filters['status'] ?? null, fn (Builder $q, string $status) => $q->where('status', $status))
             ->when($filters['assignee_id'] ?? null, fn (Builder $q, $id) => $q->where('assignee_id', (int) $id))

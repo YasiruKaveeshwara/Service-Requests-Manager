@@ -8,6 +8,9 @@ use App\Enums\RequestCategory;
 use App\Enums\RequestPriority;
 use Illuminate\Validation\Rule;
 
+/**
+ * Reusable validation rules for request title and business fields.
+ */
 trait HasServiceRequestFields
 {
     /** @return array<string, array<int, mixed>> */

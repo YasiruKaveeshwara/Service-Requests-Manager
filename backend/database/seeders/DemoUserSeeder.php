@@ -7,8 +7,12 @@ namespace Database\Seeders;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 
+/**
+ * Creates the role hierarchy used by local development and demonstrations.
+ */
 final class DemoUserSeeder extends Seeder
 {
+    /** Create managers, reporting employees, and operations users. */
     public function run(): void
     {
         $maya = User::factory()->manager()->create([

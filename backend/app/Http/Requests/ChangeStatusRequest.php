@@ -7,6 +7,9 @@ namespace App\Http\Requests;
 use App\Enums\RequestStatus;
 use Illuminate\Validation\Rule;
 
+/**
+ * Validates the two operations status transitions exposed by the API.
+ */
 final class ChangeStatusRequest extends ServiceRequestActionRequest
 {
     protected function ability(): string

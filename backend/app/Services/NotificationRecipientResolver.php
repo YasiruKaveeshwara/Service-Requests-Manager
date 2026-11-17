@@ -10,11 +10,17 @@ use App\Models\ServiceRequest;
 use App\Models\User;
 use Illuminate\Support\Collection;
 
+/**
+ * Resolves recipients for each request event according to the organization
+ * hierarchy and the request's current participants.
+ */
 final class NotificationRecipientResolver
 {
     /** @return Collection<int, User> */
     public function resolve(ServiceRequest $serviceRequest, RequestNotificationType $type, User $actor): Collection
     {
+        // Eagerly load the relationships needed by all notification branches to
+        // avoid unpredictable query counts inside the queued job.
         $serviceRequest->loadMissing(['requester.manager', 'assignee']);
         /** @var User $requester */
         $requester = $serviceRequest->requester;
@@ -32,6 +38,7 @@ final class NotificationRecipientResolver
 
         return $recipients
             ->filter()
+            // Do not send an actor a notification for their own action.
             ->reject(fn (User $user): bool => $user->id === $actor->id)
             ->unique('id')
             ->values();

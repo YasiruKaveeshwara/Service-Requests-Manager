@@ -10,10 +10,16 @@ use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 use Throwable;
 
+/**
+ * Converts domain, validation, authentication, and HTTP failures into the
+ * consistent JSON error envelope consumed by the frontend.
+ */
 final class ApiExceptionRenderer
 {
     public function render(Throwable $e): JsonResponse
     {
+        // Match from most specific application errors to the generic fallback
+        // so validation and workflow details are not hidden behind status 500.
         return match (true) {
             $e instanceof ValidationException => $this->error('Validation failed.', 'validation_failed', 422, $e->errors()),
             $e instanceof WorkflowException => $this->error($e->getMessage(), 'invalid_transition', 422),

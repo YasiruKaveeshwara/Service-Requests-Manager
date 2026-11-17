@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace App\Enums;
 
+/**
+ * User-facing events that produce database and email notifications.
+ */
 enum RequestNotificationType: string
 {
     case Submitted = 'submitted';

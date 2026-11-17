@@ -10,8 +10,12 @@ use App\Models\ServiceRequest;
 use App\Services\CommentService;
 use Illuminate\Http\JsonResponse;
 
+/**
+ * Exposes request comment creation after policy and input validation.
+ */
 final class CommentController
 {
+    /** Add a comment and append the corresponding audit event. */
     public function store(StoreCommentRequest $request, ServiceRequest $serviceRequest, CommentService $comments): JsonResponse
     {
         $comment = $comments->add($serviceRequest, $request->user(), $request->validated('body'));

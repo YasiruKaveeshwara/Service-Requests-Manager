@@ -11,6 +11,9 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
+/**
+ * Delivers a workflow event through both database and mail channels.
+ */
 class RequestStatusNotification extends Notification
 {
     use Queueable;
@@ -24,6 +27,8 @@ class RequestStatusNotification extends Notification
     /** @return list<string> */
     public function via(object $notifiable): array
     {
+        // The database channel powers the in-app bell; mail provides an
+        // independent delivery path for the same event.
         return ['database', 'mail'];
     }
 

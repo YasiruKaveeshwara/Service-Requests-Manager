@@ -18,6 +18,13 @@ use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 
+/**
+ * Coordinates all state-changing request operations.
+ *
+ * Every mutation is serialized through a transaction and row lock, audited,
+ * and followed by an asynchronous notification when the operation requires
+ * one. Controllers should call this service instead of changing models.
+ */
 final class RequestWorkflowService
 {
     public function __construct(private readonly ActivityLogger $activity) {}
@@ -159,6 +166,8 @@ final class RequestWorkflowService
      */
     private function run(ServiceRequest $serviceRequest, User $actor, Closure $callback): ServiceRequest
     {
+        // Lock the current row so concurrent approvals, assignments, or status
+        // changes cannot both succeed against the same previous state.
         [$locked, $notification] = DB::transaction(function () use ($serviceRequest, $callback): array {
             $locked = ServiceRequest::query()->lockForUpdate()->findOrFail($serviceRequest->getKey());
 
@@ -166,6 +175,8 @@ final class RequestWorkflowService
         });
 
         if ($notification instanceof RequestNotificationType) {
+            // Dispatch after the transaction returns so the job sees committed
+            // request data and cannot notify about a rolled-back operation.
             SendRequestNotificationsJob::dispatch($locked, $notification, $actor->id);
         }
 

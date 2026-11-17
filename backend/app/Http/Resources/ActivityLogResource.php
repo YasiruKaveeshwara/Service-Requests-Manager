@@ -6,6 +6,9 @@ namespace App\Http\Resources;
 
 use App\Models\ActivityLog;
 
+/**
+ * Serializes one audit event, including actor and status context.
+ */
 final class ActivityLogResource extends ApiResource
 {
     /** @return array<string, mixed> */

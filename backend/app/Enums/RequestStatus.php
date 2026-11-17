@@ -4,6 +4,12 @@ declare(strict_types=1);
 
 namespace App\Enums;
 
+/**
+ * States a service request may occupy during its lifecycle.
+ *
+ * The transition map below is the single source of truth for workflow
+ * validation; controllers and policies should not duplicate these rules.
+ */
 enum RequestStatus: string
 {
     case Draft = 'draft';
@@ -18,6 +24,8 @@ enum RequestStatus: string
     /** @return list<self> */
     public function allowedTransitions(): array
     {
+        // Terminal states intentionally return an empty list so that both the
+        // service layer and the UI can determine when a request is immutable.
         return match ($this) {
             self::Draft => [self::Submitted, self::Cancelled],
             self::Submitted => [self::Approved, self::Rejected, self::Returned, self::Cancelled],
@@ -54,6 +62,7 @@ enum RequestStatus: string
     /** @return list<self> */
     public static function operationsVisible(): array
     {
+        // Operations users only work on requests that passed managerial review.
         return [self::Approved, self::InProgress, self::Completed];
     }
 

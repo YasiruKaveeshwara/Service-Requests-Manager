@@ -14,8 +14,14 @@ use App\Services\CommentService;
 use App\Services\RequestWorkflowService;
 use Illuminate\Database\Seeder;
 
+/**
+ * Builds representative requests across every meaningful workflow state.
+ *
+ * Approved records also provide enough operations data to exercise pagination.
+ */
 final class DemoRequestSeeder extends Seeder
 {
+    /** Create requests through production workflow services, not direct inserts. */
     public function run(RequestWorkflowService $workflow, CommentService $comments): void
     {
         $maya = User::query()->where('email', 'manager@service-requests.test')->firstOrFail();
@@ -70,6 +76,8 @@ final class DemoRequestSeeder extends Seeder
 
         $workflow->create($ella, ['title' => 'Parking access card', 'description' => 'Parking access is needed.', 'category' => 'access', 'priority' => 'medium'], true);
 
+        // Keep multiple approved requests so pagination and operations actions
+        // can be verified immediately after a fresh seed.
         for ($number = 1; $number <= 12; $number++) {
             $request = $workflow->create($ethan, [
                 'title' => "Shared equipment request {$number}",

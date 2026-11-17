@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
+    /** Create comments linked to requests and their authors. */
     public function up(): void
     {
         Schema::create('comments', function (Blueprint $table): void {
@@ -21,6 +22,7 @@ return new class extends Migration
         });
     }
 
+    /** Remove comments during rollback. */
     public function down(): void
     {
         Schema::dropIfExists('comments');

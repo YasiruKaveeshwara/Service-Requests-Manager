@@ -9,6 +9,9 @@ use App\Http\Resources\ActivityLogResource;
 use App\Models\ServiceRequest;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
+/**
+ * Returns the authorized audit history for a service request.
+ */
 final class ActivityLogController
 {
     public function index(ListActivityRequest $request, ServiceRequest $serviceRequest): AnonymousResourceCollection

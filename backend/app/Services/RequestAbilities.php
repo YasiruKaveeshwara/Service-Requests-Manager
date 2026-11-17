@@ -8,6 +8,12 @@ use App\Enums\RequestStatus;
 use App\Models\ServiceRequest;
 use App\Models\User;
 
+/**
+ * Builds the action map returned with each request resource.
+ *
+ * The frontend uses this map for presentation, but every action remains
+ * protected by the corresponding policy and workflow service validation.
+ */
 final class RequestAbilities
 {
     /** @return array<string, bool> */
@@ -15,6 +21,8 @@ final class RequestAbilities
     {
         $status = $serviceRequest->status;
 
+        // Keep status checks alongside policy checks so an action disappears as
+        // soon as the request leaves the state in which it is meaningful.
         return [
             'update' => $user->can('update', $serviceRequest) && $status->isEditable(),
             'submit' => $user->can('submit', $serviceRequest) && $status->canTransitionTo(RequestStatus::Submitted) && $user->manager_id !== null,

@@ -7,6 +7,9 @@ namespace App\Http\Requests;
 use App\Enums\ManagerDecision;
 use Illuminate\Validation\Rule;
 
+/**
+ * Validates manager decisions and enforces explanations for negative ones.
+ */
 final class DecideServiceRequestRequest extends ServiceRequestActionRequest
 {
     protected function ability(): string

@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
+    /** Create Laravel's database notification storage for the in-app bell. */
     /**
      * Run the migrations.
      */
@@ -26,6 +27,7 @@ return new class extends Migration
     /**
      * Reverse the migrations.
      */
+    /** Remove notification storage during rollback. */
     public function down(): void
     {
         Schema::dropIfExists('notifications');

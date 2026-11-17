@@ -16,6 +16,12 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Notification;
 
+/**
+ * Resolves and delivers notifications outside the request-response cycle.
+ *
+ * Database notifications are created by the notification channels; the same
+ * event also supports email delivery through the configured mail transport.
+ */
 class SendRequestNotificationsJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
@@ -32,6 +38,8 @@ class SendRequestNotificationsJob implements ShouldQueue
 
     public function handle(NotificationRecipientResolver $resolver): void
     {
+        // The actor may have been removed after dispatch; in that case there is
+        // no trustworthy event context, so the job can be safely discarded.
         $actor = User::query()->find($this->actorId);
 
         if ($actor === null) {

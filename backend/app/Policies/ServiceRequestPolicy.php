@@ -9,6 +9,12 @@ use App\Enums\UserRole;
 use App\Models\ServiceRequest;
 use App\Models\User;
 
+/**
+ * Authorization rules for request access and workflow actions.
+ *
+ * Policies answer whether an action is available to a user; the workflow
+ * service still validates the status transition and business invariants.
+ */
 final class ServiceRequestPolicy
 {
     public function viewAny(User $user): bool
@@ -57,6 +63,8 @@ final class ServiceRequestPolicy
 
     public function changeStatus(User $user, ServiceRequest $serviceRequest): bool
     {
+        // An unassigned request may be claimed by an operations user; once
+        // assigned, only that owner may advance its status.
         return $user->hasRole(UserRole::Operations)
             && $this->view($user, $serviceRequest)
             && ($serviceRequest->assignee_id === null || $serviceRequest->assignee_id === $user->id);
@@ -74,6 +82,8 @@ final class ServiceRequestPolicy
 
     private function isManagerOf(User $user, ServiceRequest $serviceRequest): bool
     {
+        // Load the requester only when needed to avoid an extra query for other
+        // policy checks while still keeping this rule safe for lazy loading.
         $serviceRequest->loadMissing('requester');
 
         return $serviceRequest->requester->manager_id === $user->id;

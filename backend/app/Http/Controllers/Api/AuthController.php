@@ -12,8 +12,12 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
+/**
+ * Handles token-based authentication for the API.
+ */
 final class AuthController
 {
+    /** Authenticate a user and return a new personal access token. */
     public function login(LoginRequest $request): JsonResponse
     {
         $user = User::query()->where('email', $request->validated('email'))->first();
@@ -29,6 +33,7 @@ final class AuthController
         ]]);
     }
 
+    /** Revoke only the token used by the current request. */
     public function logout(Request $request): JsonResponse
     {
         $request->user()->currentAccessToken()->delete();
@@ -36,6 +41,7 @@ final class AuthController
         return response()->json(['data' => ['message' => 'Logged out.']]);
     }
 
+    /** Return the authenticated user and reporting manager. */
     public function me(Request $request): UserResource
     {
         return new UserResource($request->user()->load('manager'));

@@ -6,6 +6,9 @@ namespace App\Http\Resources;
 
 use App\Models\Comment;
 
+/**
+ * Serializes a request comment and its author.
+ */
 final class CommentResource extends ApiResource
 {
     /** @return array<string, mixed> */

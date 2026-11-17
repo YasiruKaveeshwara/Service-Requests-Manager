@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
+    /** Create the append-only request audit log. */
     public function up(): void
     {
         Schema::create('activity_logs', function (Blueprint $table): void {
@@ -26,6 +27,7 @@ return new class extends Migration
         });
     }
 
+    /** Remove audit entries during rollback. */
     public function down(): void
     {
         Schema::dropIfExists('activity_logs');

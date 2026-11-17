@@ -7,6 +7,9 @@ namespace App\Http\Requests;
 use App\Enums\UserRole;
 use Illuminate\Validation\Rule;
 
+/**
+ * Validates an operations-user assignment and optional audit comment.
+ */
 final class AssignServiceRequestRequest extends ServiceRequestActionRequest
 {
     protected function ability(): string

@@ -6,6 +6,9 @@ namespace App\Http\Requests;
 
 use App\Http\Requests\Concerns\HasServiceRequestFields;
 
+/**
+ * Validates editable request fields for draft and returned requests.
+ */
 final class UpdateServiceRequestRequest extends ServiceRequestActionRequest
 {
     use HasServiceRequestFields;

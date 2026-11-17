@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace App\Enums;
 
+/**
+ * Roles used by policies, visibility scopes, and workflow authorization.
+ */
 enum UserRole: string
 {
     case Employee = 'employee';

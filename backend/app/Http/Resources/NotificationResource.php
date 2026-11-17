@@ -6,6 +6,9 @@ namespace App\Http\Resources;
 
 use Illuminate\Notifications\DatabaseNotification;
 
+/**
+ * Maps Laravel's database notification payload to the frontend contract.
+ */
 final class NotificationResource extends ApiResource
 {
     /** @return array<string, mixed> */

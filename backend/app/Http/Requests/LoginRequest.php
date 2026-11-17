@@ -6,6 +6,9 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
+/**
+ * Validates the credentials accepted by the token login endpoint.
+ */
 class LoginRequest extends FormRequest
 {
     public function authorize(): bool

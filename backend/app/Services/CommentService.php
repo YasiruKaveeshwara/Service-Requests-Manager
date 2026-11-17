@@ -11,6 +11,9 @@ use App\Models\ServiceRequest;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
 
+/**
+ * Adds comments while enforcing the request's final-state rule.
+ */
 final class CommentService
 {
     public function __construct(private readonly ActivityLogger $activity) {}
@@ -18,6 +21,8 @@ final class CommentService
     public function add(ServiceRequest $serviceRequest, User $actor, string $body): Comment
     {
         return DB::transaction(function () use ($serviceRequest, $actor, $body): Comment {
+            // Serialize comments with workflow changes so a final request cannot
+            // receive a comment during a concurrent transition.
             $locked = ServiceRequest::query()->lockForUpdate()->findOrFail($serviceRequest->getKey());
 
             if ($locked->status->isFinal()) {

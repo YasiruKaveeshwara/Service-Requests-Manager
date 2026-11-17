@@ -9,10 +9,15 @@ use App\Models\ServiceRequest;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
+/**
+ * Validates request-list filters, sorting, and pagination bounds.
+ */
 final class ListServiceRequestsRequest extends FormRequest
 {
     public function authorize(): bool
     {
+        // The policy currently allows every authenticated role to list; the
+        // model scope still limits which records each role can see.
         return $this->user()->can('viewAny', ServiceRequest::class);
     }
 

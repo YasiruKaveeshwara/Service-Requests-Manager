@@ -4,6 +4,12 @@ declare(strict_types=1);
 
 namespace App\Enums;
 
+/**
+ * Decisions available to a manager reviewing a submitted request.
+ *
+ * Each decision maps to a workflow status and notification type so the
+ * workflow service can apply one consistent interpretation of the action.
+ */
 enum ManagerDecision: string
 {
     case Approve = 'approve';

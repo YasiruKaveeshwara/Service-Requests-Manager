@@ -6,6 +6,9 @@ namespace App\Http\Resources;
 
 use App\Models\User;
 
+/**
+ * Public API representation of a user without credential fields.
+ */
 class UserResource extends ApiResource
 {
     /** @return array<string, mixed> */
